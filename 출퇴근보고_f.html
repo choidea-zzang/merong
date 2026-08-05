@@ -18,6 +18,17 @@
     --accent: #00B1CC;
     --accent-soft: #E1F6FA;
     --card: #FFFFFF;
+    --purple: #8B7FD6;
+    --purple-dark: #6C5CC4;
+    --neutral-bg: #F7F5F0;
+    --neutral-line: #E7E2D6;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
+    --shadow-card: 0 2px 8px rgba(40,30,10,0.055);
+    --shadow-btn: 0 2px 6px rgba(0,0,0,0.09);
+    --shadow-btn-hover: 0 3px 10px rgba(0,0,0,0.13);
   }
   * { box-sizing: border-box; }
   .hidden{ display:none !important; }
@@ -63,7 +74,8 @@
   .card {
     background: var(--card);
     border:1px solid var(--line);
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
     padding: 16px;
   }
   label {
@@ -118,8 +130,8 @@
     background: #F2A93B;
   }
   #dirGroup .toggle-btn[data-dir="break"].active{
-    border-color: #8B7FD6;
-    background: #8B7FD6;
+    border-color: var(--purple);
+    background: var(--purple);
   }
   #dirGroup .toggle-btn[data-dir="end"].active{
     border-color: #FF6B4A;
@@ -235,20 +247,20 @@
     font-weight:700;
   }
   .quick-hours button.quick-special{
-    border:1.5px dashed #F2A93B;
-    background:#FFF8E8;
-    color:#B8792A;
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--ink);
   }
-  .quick-hours button.quick-special:hover{ background:#FFF0CE; }
+  .quick-hours button.quick-special:hover{ border-color:var(--accent); }
   .quick-hours button.quick-special.empty{
     border-style:dashed;
     border-color:var(--line);
     background:#fafaf8;
     color:var(--ink-soft);
-    opacity:0.6;
+    opacity:0.5;
     cursor:default;
   }
-  .quick-hours button.quick-special.empty:hover{ background:#fafaf8; }
+  .quick-hours button.quick-special.empty:hover{ background:#fafaf8; border-color:var(--line); }
   .result-divider{
     border:none;
     border-top:1px solid var(--line);
@@ -284,7 +296,7 @@
   }
   .preview.dir-break{
     background: #EFEBFB;
-    border-left-color: #8B7FD6;
+    border-left-color: var(--purple);
   }
   .preview.dir-end{
     background: #FFEFE8;
@@ -316,9 +328,15 @@
   .break-section.hidden{ display:none; }
   .chapter-box{
     padding:16px;
-    border-radius:10px;
+    border-radius:var(--radius-md);
     margin-top:16px;
+    background:var(--neutral-bg);
+    border:1px solid var(--neutral-line);
+    border-left:4px solid var(--ink-soft);
+    box-shadow:var(--shadow-card);
   }
+  .chapter-box.dir-start{ border-left-color:#F2A93B; }
+  .chapter-box.dir-end{ border-left-color:#FF6B4A; }
   .chapter-box.hidden{ display:none; }
   .chapter-box label,
   .break-section label,
@@ -335,23 +353,26 @@
   .next-day-section > label:first-child{
     margin-top:0;
   }
-  .time-box{
-    background:#EEF3F1;
-    border:1px solid #B9D2CA;
-  }
   .break-section{
     margin-top:16px;
     padding:16px;
-    background:#F3F1EC;
-    border:1px solid var(--line);
-    border-radius:10px;
+    background:var(--neutral-bg);
+    border:1px solid var(--neutral-line);
+    border-left:4px solid #FF6B4A;
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
+  }
+  #midBreakSection{
+    border-left-color:var(--purple);
   }
   .next-day-section{
     margin-top:16px;
     padding:16px;
-    background:var(--accent-soft);
-    border:1px solid var(--accent);
-    border-radius:10px;
+    background:var(--neutral-bg);
+    border:1px solid var(--neutral-line);
+    border-left:4px solid #FF6B4A;
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
   }
   .break-section label,
   .next-day-section label{
@@ -367,22 +388,22 @@
     color:var(--ink-soft);
     margin-bottom:16px;
   }
-  .section-title.next{ color:var(--accent); }
   .step-num{
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    width:16px;
-    height:16px;
+    width:18px;
+    height:18px;
     border-radius:50%;
     background:var(--ink-soft);
     color:#fff;
     font-size:10px;
     font-weight:800;
-    margin-right:6px;
+    margin-right:7px;
     flex-shrink:0;
+    box-shadow:0 1px 2px rgba(0,0,0,0.15);
   }
-  .step-num.next{ background:var(--accent); }
+  .step-num.next{ background:#FF6B4A; }
   #breakSection{
     padding-top:10px;
     padding-bottom:10px;
@@ -397,35 +418,137 @@
   #breakSection label:first-of-type{
     margin-top:0;
   }
-  .next-day-label{
-    font-size:15px;
-    color:var(--accent);
-    font-weight:800;
-    margin-bottom:4px;
-  }
-  .edit-label{
-    font-size:11px;
-    font-weight:500;
+
+  .today-start-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:14px;
+    margin-bottom:0;
+    padding:14px 16px;
+    background:#fff;
+    border:1px solid var(--neutral-line);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
+    font-size:14px;
     color:var(--ink-soft);
-    margin-top:2px;
-    margin-bottom:4px;
   }
-  .edit-label .hint{
+  .today-start-bar b{
+    color:var(--accent);
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .chapter-box.dir-start .today-start-bar b{ color:#F2A93B; }
+  .chapter-box.dir-end .today-start-bar b{ color:#FF6B4A; }
+  .break-section .today-start-bar b,
+  .next-day-section .today-start-bar b{ color:#FF6B4A; }
+  #midBreakSection .today-start-bar b{ color:var(--purple); }
+  .today-start-bar .auto-note{
+    display:block;
+    margin-top:4px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--accent);
+  }
+  .today-start-bar .edit-btn{
+    flex-shrink:0;
+    padding:4px 2px;
+    border:none;
+    background:none;
+    color:var(--ink-soft);
+    font-size:12px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
     text-decoration:underline;
-    text-underline-offset:2px;
+    text-underline-offset:3px;
+    text-decoration-color:var(--line);
+    transition:color 0.12s ease;
+  }
+  .today-start-bar .edit-btn:hover{ color:var(--ink); text-decoration-color:var(--ink-soft); }
+  .today-start-confirm{
+    flex-shrink:0;
+    padding:7px 16px;
+    border:none;
+    border-radius:var(--radius-pill);
+    background:linear-gradient(135deg, var(--purple), var(--purple-dark));
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    box-shadow:0 3px 8px rgba(108,92,196,0.35);
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .today-start-confirm:hover{ box-shadow:0 4px 12px rgba(108,92,196,0.45); transform:translateY(-1px); }
+  .today-start-confirm:active{ transform:translateY(0) scale(0.97); }
+  #breakDetailWrap, #mainTimeDetailWrap{
+    margin-top:14px;
+    padding:14px;
+    background:var(--neutral-bg);
+    border-radius:var(--radius-md);
+    border:1px solid var(--neutral-line);
+  }
+  .hour-stepper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    margin-bottom:14px;
+  }
+  .hour-stepper button{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:none;
+    background:#fff;
+    color:var(--ink);
+    font-size:20px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1), inset 0 0 0 1.5px var(--line);
+    transition:all 0.12s ease;
+  }
+  .hour-stepper button:hover{
+    color:var(--accent);
+    box-shadow:0 3px 9px rgba(0,177,204,0.2), inset 0 0 0 1.5px var(--accent);
+  }
+  .hour-stepper button:active{ transform:scale(0.92); }
+  #breakHourDisplay{
+    min-width:56px;
+    text-align:center;
+    font-size:20px;
+    font-weight:800;
+    color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .today-start-confirm.confirm-block{
+    display:block;
+    width:100%;
+    margin-top:14px;
+    padding:9px;
+    font-size:13px;
   }
   .custom-input.compact-input{
     margin-top:0;
-    padding:6px 10px;
-    font-size:12px;
+    padding:9px 12px;
+    font-size:13px;
     max-width:170px;
+    border-radius:var(--radius-pill);
   }
   .custom-input{
     width:100%;
     margin-top:10px;
     padding:9px 12px;
-    border:1px solid var(--accent);
-    border-radius:8px;
+    border:1.5px solid var(--neutral-line);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
     font-size:13px;
     font-family:inherit;
     color:var(--ink);
@@ -433,8 +556,9 @@
   }
   .custom-input.hidden{ display:none; }
   .custom-input:focus{
-    outline:2px solid var(--accent);
-    outline-offset:1px;
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(0,177,204,0.15);
   }
   .copy-btn {
     margin-top: 16px;
@@ -469,12 +593,65 @@
     70%{ transform: scale(0.95) rotate(4deg); }
     100%{ transform: scale(1) rotate(0deg); }
   }
+  .burst-particle{
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    animation: burstFly 0.5s cubic-bezier(.15,.85,.3,1) forwards;
+  }
+  @keyframes burstFly{
+    0%{ transform: translate(-50%, -50%) scale(0.4) rotate(0deg); opacity: 1; }
+    100%{ transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.15) rotate(25deg); opacity: 0; }
+  }
+  .farewell-overlay{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    pointer-events: none;
+    background: rgba(255,255,255,0);
+  }
+  .farewell-overlay.hidden{ display:none; }
+  .farewell-card{
+    text-align: center;
+    animation: farewellPop 2.2s ease forwards;
+  }
+  .farewell-emoji{
+    font-size: 88px;
+    line-height: 1;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.15));
+  }
+  .farewell-img{
+    max-width: 220px;
+    max-height: 220px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  .farewell-text{
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--farewell-color, #FF6B4A);
+    text-shadow: 0 2px 10px rgba(255,255,255,0.9);
+  }
+  @keyframes farewellPop{
+    0%{ transform: scale(0.3); opacity: 0; }
+    25%{ transform: scale(1.15); opacity: 1; }
+    40%{ transform: scale(1); opacity: 1; }
+    75%{ transform: scale(1.05); opacity: 1; }
+    100%{ transform: scale(1.3); opacity: 0; }
+  }
   .copy-btn.dir-start{
     background: #F2A93B;
     box-shadow: 0 4px 14px rgba(242,169,59,0.35);
   }
   .copy-btn.dir-break{
-    background: #8B7FD6;
+    background: var(--purple);
     box-shadow: 0 4px 14px rgba(139,127,214,0.35);
   }
   .copy-btn.dir-end{
@@ -564,12 +741,19 @@
 
     <div id="mainTimeSection" class="chapter-box time-box">
       <div class="section-title" id="mainTimeSectionTitle"><span class="step-num">1</span>출근 시간</div>
-      <label>시간</label>
-      <div class="quick-hours" id="quickHours"></div>
-      <div class="hour-grid hidden" id="hourGrid"></div>
-      <div class="min-toggle" id="minToggle">
-        <button type="button" data-min="0">:00</button>
-        <button type="button" data-min="30">:30</button>
+
+      <div class="today-start-bar" id="mainTimeBar">
+        <span id="mainTimeSummary">시간: <b>9:00</b></span>
+        <button type="button" id="mainTimeEditBtn" class="edit-btn">변경하기</button>
+      </div>
+      <div id="mainTimeDetailWrap" class="hidden">
+        <div class="quick-hours" id="quickHours"></div>
+        <div class="hour-grid hidden" id="hourGrid"></div>
+        <div class="min-toggle" id="minToggle">
+          <button type="button" data-min="0">:00</button>
+          <button type="button" data-min="30">:30</button>
+        </div>
+        <button type="button" id="mainTimeConfirmBtn" class="today-start-confirm confirm-block">확인</button>
       </div>
 
       <div id="locSection">
@@ -613,28 +797,32 @@
 
     <div id="breakSection" class="break-section hidden">
       <div class="section-title"><span class="step-num">2</span>휴게 사용</div>
-      <label>휴게 시간</label>
-      <div class="toggle-group" id="breakGroup">
-        <button class="toggle-btn active" data-break="0">0h</button>
-        <button class="toggle-btn" data-break="0.5">0.5h</button>
-        <button class="toggle-btn" data-break="1">1h</button>
-        <button class="toggle-btn" data-break="1.5">1.5h</button>
-        <button class="toggle-btn" data-break="2">2h</button>
-        <button class="toggle-btn" data-break="custom" id="breakCustomBtn">직접</button>
+      <div class="today-start-bar" id="breakBar" style="margin-top:0;">
+        <span id="breakSummary">휴게: <b>0h</b> · 점심 포함 (기본)</span>
+        <button type="button" id="breakEditBtn" class="edit-btn">변경하기</button>
       </div>
-      <input type="number" id="breakCustomInput" class="custom-input hidden" step="0.5" min="0" placeholder="휴게 시간(h) 입력">
-
-      <div class="toggle-group" id="lunchGroup" style="margin-top:8px;">
-        <button class="toggle-btn active" data-lunch="yes">🍱 점심 포함</button>
-        <button class="toggle-btn" data-lunch="no">🚫 점심 없이</button>
+      <div id="breakDetailWrap" class="hidden">
+        <div class="hour-stepper">
+          <button type="button" id="breakHourMinus">−</button>
+          <span id="breakHourDisplay">0h</span>
+          <button type="button" id="breakHourPlus">+</button>
+        </div>
+        <div class="toggle-group" id="lunchGroup" style="margin-top:0;">
+          <button class="toggle-btn active" data-lunch="yes">🍱 점심 포함</button>
+          <button class="toggle-btn" data-lunch="no">🚫 점심 없이</button>
+        </div>
+        <button type="button" id="breakConfirmBtn" class="today-start-confirm confirm-block">확인</button>
       </div>
     </div>
 
     <div id="nextDaySection" class="next-day-section hidden">
       <div class="section-title next"><span class="step-num next">3</span>다음 근무 시작</div>
-      <div class="next-day-label" id="nextDayLabel">-</div>
-      <label class="edit-label">날짜 변경도 가능해요! ▼</label>
-      <input type="date" id="nextWorkDateInput" class="custom-input compact-input">
+      <div class="today-start-bar" id="nextDateBar">
+        <span id="nextDayLabel">-</span>
+        <button type="button" id="nextDateEditBtn" class="edit-btn">변경하기</button>
+      </div>
+      <input type="date" id="nextWorkDateInput" class="custom-input compact-input hidden">
+      <button type="button" id="nextDateConfirmBtn" class="today-start-confirm hidden">확인</button>
 
       <label>출근 시간</label>
       <div class="quick-hours compact" id="quickHoursNext"></div>
@@ -669,6 +857,16 @@
     <button type="button" id="statsToggle" class="stats-toggle hidden">📊 사용 통계 보기</button>
   </div>
   <div id="statsPanel" class="stats-panel hidden"></div>
+</div>
+
+<div id="farewellOverlay" class="farewell-overlay hidden">
+  <div class="farewell-card">
+    <!-- 이미지로 바꾸고 싶으면: ① 이미지 파일을 이 html이랑 같은 폴더에 GitHub로 업로드
+         ② 아래 JS의 farewellContent 안에 image: '파일명.jpg' 한 줄만 채우면 자동으로 이미지가 씀 -->
+    <img class="farewell-img hidden" id="farewellImg" alt="">
+    <div class="farewell-emoji" id="farewellEmoji">🙌</div>
+    <div class="farewell-text" id="farewellText">안녕히 계세요 여러분~!</div>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -716,7 +914,6 @@
   const nextDayLabel = document.getElementById('nextDayLabel');
   const locGroupNext = document.getElementById('locGroupNext');
   const breakSection = document.getElementById('breakSection');
-  const breakGroup = document.getElementById('breakGroup');
   const lunchGroup = document.getElementById('lunchGroup');
   const midBreakSection = document.getElementById('midBreakSection');
   const midBreakTypeGroup = document.getElementById('midBreakTypeGroup');
@@ -730,6 +927,7 @@
   let currentDir = 'start';  // start | break | end
   let nextLoc = 'home';      // 다음 근무일 근무 형태
   let breakHours = 0;        // 오늘 휴게 시간(퇴근 시 총합)
+  let mainTimeAutoNote = false;  // 챕터1 시간이 방금 접속시각 기준 자동설정된 상태인지
   let noLunch = false;       // 점심 없이 근무 여부(퇴근 시)
   let midBreakType = 'general';       // general | lunch-home | lunch-office | nolunch (휴게 구분 선택 시)
   let midBreakHours = 1;              // 휴게 시간(일반 휴게일 때)
@@ -761,11 +959,28 @@
   const wasFridayAuto = today.getDay() === 5;
 
   const nextWorkDateInput = document.getElementById('nextWorkDateInput');
+  const nextDateEditBtn = document.getElementById('nextDateEditBtn');
+  const nextDateConfirmBtn = document.getElementById('nextDateConfirmBtn');
   nextWorkDateInput.value = toDateInputValue(nextWorkDate);
+
+  const nextDateBar = document.getElementById('nextDateBar');
+  nextDateEditBtn.addEventListener('click', () => {
+    nextDateBar.classList.add('hidden');
+    nextDateConfirmBtn.classList.remove('hidden');
+    openTimePicker(nextWorkDateInput);
+  });
+
+  nextDateConfirmBtn.addEventListener('click', () => {
+    nextWorkDateInput.classList.add('hidden');
+    nextDateConfirmBtn.classList.add('hidden');
+    nextDateBar.classList.remove('hidden');
+  });
 
   function updateNextDayLabel(isAutoUnchanged){
     const nDayName2 = days[nextWorkDate.getDay()];
-    nextDayLabel.textContent = `${nextWorkDate.getMonth()+1}/${nextWorkDate.getDate()}(${nDayName2})${(isAutoUnchanged && wasFridayAuto) ? ' — 금요일이라 다음 주 월요일로 자동 계산' : ''}`;
+    const dateStr = `${nextWorkDate.getMonth()+1}/${nextWorkDate.getDate()}(${nDayName2})`;
+    const note = (isAutoUnchanged && wasFridayAuto) ? '<span class="auto-note">⏰ 금요일이라 다음 주 월요일로 자동 계산되었어요</span>' : '';
+    nextDayLabel.innerHTML = `<b>${dateStr}</b>${note}`;
   }
   updateNextDayLabel(true);
 
@@ -849,6 +1064,31 @@
   const quickHoursEl = document.getElementById('quickHours');
   const hourGridEl = document.getElementById('hourGrid');
   const minToggleEl = document.getElementById('minToggle');
+  const mainTimeBar = document.getElementById('mainTimeBar');
+  const mainTimeSummary = document.getElementById('mainTimeSummary');
+  const mainTimeEditBtn = document.getElementById('mainTimeEditBtn');
+  const mainTimeDetailWrap = document.getElementById('mainTimeDetailWrap');
+  const mainTimeConfirmBtn = document.getElementById('mainTimeConfirmBtn');
+
+  function updateMainTimeSummary(){
+    const label = currentDir === 'end' ? '종료' : '시간';
+    mainTimeSummary.innerHTML = `${label}: <b>${timeState.hour}:${pad2(timeState.min)}</b>${mainTimeAutoNote ? '<span class="auto-note">⏰ 가까운 시간으로 자동 설정되었어요</span>' : ''}`;
+  }
+  function mainTimeUserChanged(){
+    mainTimeAutoNote = false;
+    buildText();
+  }
+  function collapseMainTime(){
+    mainTimeDetailWrap.classList.add('hidden');
+    mainTimeBar.classList.remove('hidden');
+    updateMainTimeSummary();
+  }
+  mainTimeEditBtn.addEventListener('click', () => {
+    mainTimeBar.classList.add('hidden');
+    mainTimeDetailWrap.classList.remove('hidden');
+  });
+  mainTimeConfirmBtn.addEventListener('click', collapseMainTime);
+
   const quickHoursNextEl = document.getElementById('quickHoursNext');
   const hourGridNextEl = document.getElementById('hourGridNext');
   const minToggleNextEl = document.getElementById('minToggleNext');
@@ -871,6 +1111,7 @@
             setLoc(p.loc);
             locGroupElRef.querySelectorAll('.toggle-btn').forEach(b=> b.classList.toggle('active', b.dataset.loc === p.loc));
           }
+          mainTimeAutoNote = false;
           buildText();
         }
       };
@@ -886,16 +1127,27 @@
 
   // 출근 시간대 세트(오전+개인화 단축버튼), 종료/퇴근 선택 시 오후 세트로 교체됨
   let selectMainHour = buildHourButtons(
-    quickHoursEl, hourGridEl, timeState, buildText, [[7,8,9,10]],
-    makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; saveLoc(currentDir, loc); }, locGroup)
+    quickHoursEl, hourGridEl, timeState, mainTimeUserChanged, [[7,8,9,10]],
+    makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; }, locGroup)
   );
-  bindMinToggle(minToggleEl, timeState, buildText);
+  bindMinToggle(minToggleEl, timeState, mainTimeUserChanged);
 
   const selectNextHour = buildHourButtons(
     quickHoursNextEl, hourGridNextEl, nextTimeState, buildText, [[7,8,9,10]],
     makeShortcutButtons(startPresets, () => selectNextHour, nextTimeState, minToggleNextEl, (loc)=>{ nextLoc = loc; }, locGroupNext)
   );
   bindMinToggle(minToggleNextEl, nextTimeState, buildText);
+
+  function pad2(n){ return String(n).padStart(2,'0'); }
+
+  function openTimePicker(input){
+    input.classList.remove('hidden');
+    if(input.showPicker){
+      try{ input.showPicker(); }catch(e){ input.focus(); }
+    } else {
+      input.focus();
+    }
+  }
 
   function typeLabel(loc, dir) {
     if (loc === 'home' && dir === 'start') return '재택근무 시작합니다';
@@ -938,6 +1190,7 @@
 
   function buildText() {
     const timeStr = formatTime(timeState.hour, timeState.min);
+    if(currentDir === 'start' || currentDir === 'end') updateMainTimeSummary();
     resultLabel.textContent = currentDir === 'break' ? '휴게 알림' : (currentDir === 'end' ? '퇴근 보고' : '출근 보고');
     copyBtnText.textContent = currentDir === 'break' ? midBreakCopyText() : (currentDir === 'end' ? '안녕히 계세요 여러분~!' : '형 나 출근하네...');
     let text;
@@ -980,7 +1233,6 @@
       locGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentLoc = btn.dataset.loc;
-      saveLoc(currentDir, currentLoc);
       track(`loc_${currentLoc}`, `근무형태: ${btn.textContent.trim()}`);
       buildText();
     });
@@ -996,27 +1248,40 @@
     });
   });
 
-  const breakCustomInput = document.getElementById('breakCustomInput');
+  const breakSummary = document.getElementById('breakSummary');
+  const breakEditBtn = document.getElementById('breakEditBtn');
+  const breakConfirmBtn = document.getElementById('breakConfirmBtn');
+  const breakDetailWrap = document.getElementById('breakDetailWrap');
+  const breakBar = document.getElementById('breakBar');
+  const breakHourDisplay = document.getElementById('breakHourDisplay');
 
-  breakGroup.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      breakGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if(btn.dataset.break === 'custom'){
-        breakCustomInput.classList.remove('hidden');
-        breakCustomInput.focus();
-        breakHours = parseFloat(breakCustomInput.value) || 0;
-      } else {
-        breakCustomInput.classList.add('hidden');
-        breakHours = parseFloat(btn.dataset.break);
-      }
-      buildText();
-    });
+  function updateBreakSummary(){
+    const isDefault = breakHours === 0 && !noLunch;
+    breakSummary.innerHTML = `휴게: <b>${formatH(breakHours)}h</b> · ${noLunch ? '점심 없이' : '점심 포함'}${isDefault ? ' (기본)' : ''}`;
+    return isDefault;
+  }
+  function updateBreakHourDisplay(){
+    breakHourDisplay.textContent = `${formatH(breakHours)}h`;
+  }
+  function selectBreakHours(h){
+    breakHours = Math.min(4, Math.max(0, Math.round(h * 2) / 2));
+    updateBreakHourDisplay();
+    updateBreakSummary();
+    buildText();
+  }
+  document.getElementById('breakHourMinus').addEventListener('click', () => selectBreakHours(breakHours - 0.5));
+  document.getElementById('breakHourPlus').addEventListener('click', () => selectBreakHours(breakHours + 0.5));
+  updateBreakHourDisplay();
+
+  breakEditBtn.addEventListener('click', () => {
+    breakBar.classList.add('hidden');
+    breakDetailWrap.classList.remove('hidden');
   });
 
-  breakCustomInput.addEventListener('input', () => {
-    breakHours = parseFloat(breakCustomInput.value) || 0;
-    buildText();
+  breakConfirmBtn.addEventListener('click', () => {
+    breakDetailWrap.classList.add('hidden');
+    breakBar.classList.remove('hidden');
+    updateBreakSummary();
   });
 
   lunchGroup.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -1024,6 +1289,7 @@
       lunchGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       noLunch = btn.dataset.lunch === 'no';
+      updateBreakSummary();
       buildText();
     });
   });
@@ -1043,6 +1309,8 @@
       mainTimeSectionTitle.innerHTML = isEnd
         ? '<span class="step-num">1</span>근무 종료'
         : '<span class="step-num">1</span>출근 시간';
+      mainTimeSection.classList.toggle('dir-start', !isEnd);
+      mainTimeSection.classList.toggle('dir-end', isEnd);
       if(!isBreakDir){
         // 이 탭(출근/종료)에서 마지막으로 골랐던 근무 형태를 복원, 없으면 재택 기본값
         currentLoc = getSavedLoc(currentDir) || 'home';
@@ -1052,11 +1320,27 @@
         const groups = isEnd ? [[17,18,19]] : [[7,8,9,10]];
         const extras = isEnd
           ? []
-          : makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; saveLoc(currentDir, loc); }, locGroup);
-        selectMainHour = buildHourButtons(quickHoursEl, hourGridEl, timeState, buildText, groups, extras);
-        selectMainHour(isEnd ? 18 : 9);
-        timeState.min = 0;
-        minToggleEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.min) === 0));
+          : makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; }, locGroup);
+        selectMainHour = buildHourButtons(quickHoursEl, hourGridEl, timeState, mainTimeUserChanged, groups, extras);
+        // 탭에 들어올 때마다 "그 순간" 실제 시각 기준으로 다시 자동 세팅 (고정 9시/18시가 아니라)
+        const nowRounded = isEnd ? roundToNearest30(new Date()) : roundUpTo30(new Date());
+        selectMainHour(nowRounded.hour);
+        timeState.min = nowRounded.min;
+        minToggleEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.min) === nowRounded.min));
+        mainTimeAutoNote = true;
+        collapseMainTime();
+
+        if(isEnd){
+          // 값은 그대로 유지하되, 화면은 탭에 들어올 때마다 항상 요약(접힌) 상태로 리셋
+          updateBreakHourDisplay();
+          breakDetailWrap.classList.add('hidden');
+          breakBar.classList.remove('hidden');
+          updateBreakSummary();
+
+          nextWorkDateInput.classList.add('hidden');
+          nextDateConfirmBtn.classList.add('hidden');
+          nextDateBar.classList.remove('hidden');
+        }
       }
       buildText();
     });
@@ -1108,10 +1392,92 @@
     });
   });
 
+  // 복사 성공하면 버튼 위치에서 이모지가 팡 터지는 축하 이펙트
+  // 화면 아무 데나 터치/클릭할 때마다 별·컨페티가 팡 터지는 이펙트
+  const burstColors = ['#00B1CC', '#FF6B4A', '#F2A93B', '#8B7FD6', '#2F9E5B'];
+  // 종료/퇴근 복사 시 등장 → 커짐 → 페이드아웃하는 작별 인사 연출
+  const farewellOverlay = document.getElementById('farewellOverlay');
+  let farewellTimer = null;
+  const farewellImg = document.getElementById('farewellImg');
+  const farewellEmoji = document.getElementById('farewellEmoji');
+  const farewellText = document.getElementById('farewellText');
+  // 아래 각 줄에 image: '파일명.jpg' 를 추가하면(파일은 이 html과 같은 폴더에 올려두기)
+  // 이모지 대신 그 이미지가 자동으로 쓰여요. 안 채우면 지금처럼 이모지로 나옵니다.
+  const farewellContent = {
+    start: { emoji: '🙏', text: '주님.. 돈 주세요', color: '#F2A93B', image: 'ChvUNPQUYAEE1HE.jpg' },
+    break: { emoji: '🐹', text: '그대는.. 그뭐냐.. 그거다.', color: '#8B7FD6', image: 'IMG_2710.jpg' },
+    end: { emoji: '🙌', text: '안녕히 계세요 여러분~!', color: '#FF6B4A', image: 'KYwD1TQLozn5VAK7fUOV3aOe7Ak.png' }
+  };
+  function showFarewellPopup(dir){
+    const content = farewellContent[dir];
+    if(!content) return;
+    if(content.image){
+      farewellImg.src = content.image;
+      farewellImg.classList.remove('hidden');
+      farewellEmoji.classList.add('hidden');
+    } else {
+      farewellImg.classList.add('hidden');
+      farewellEmoji.classList.remove('hidden');
+      farewellEmoji.textContent = content.emoji;
+    }
+    farewellText.textContent = content.text;
+    farewellText.style.setProperty('--farewell-color', content.color);
+    farewellOverlay.classList.remove('hidden');
+    const card = farewellOverlay.querySelector('.farewell-card');
+    card.style.animation = 'none';
+    void card.offsetWidth; // 리플로우 강제 — 애니메이션 재시작 트릭
+    card.style.animation = '';
+    clearTimeout(farewellTimer);
+    farewellTimer = setTimeout(() => farewellOverlay.classList.add('hidden'), 2200);
+  }
+
+  const burstGold = ['#F2C14E', '#F2A93B', '#E0B84B', '#FFD700'];
+  function burstShapeSVG(size, color){
+    const shapes = [
+      // 반짝이 별
+      `<svg viewBox="0 0 24 24" width="${size*1.6}" height="${size*1.6}"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="${color}"/></svg>`,
+      // 동전 (테두리+중앙 원)
+      `<svg viewBox="0 0 24 24" width="${size*1.5}" height="${size*1.5}"><circle cx="12" cy="12" r="11" fill="${color}" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff" stroke-width="1.3" opacity="0.85"/></svg>`,
+      // 지폐
+      `<svg viewBox="0 0 28 18" width="${size*2}" height="${size*1.3}"><rect x="0.5" y="0.5" width="27" height="17" rx="2.5" fill="${color}" stroke="#fff" stroke-width="1.3"/><circle cx="14" cy="9" r="4.2" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.85"/></svg>`,
+      // 폭죽 터짐(8방향)
+      `<svg viewBox="0 0 24 24" width="${size*1.7}" height="${size*1.7}"><g stroke="${color}" stroke-width="2.4" stroke-linecap="round"><path d="M12 2 L12 8"/><path d="M12 16 L12 22"/><path d="M2 12 L8 12"/><path d="M16 12 L22 12"/><path d="M4.9 4.9 L8.8 8.8"/><path d="M15.2 15.2 L19.1 19.1"/><path d="M4.9 19.1 L8.8 15.2"/><path d="M15.2 8.8 L19.1 4.9"/></g></svg>`,
+    ];
+    return shapes[Math.floor(Math.random()*shapes.length)];
+  }
+  function burstEmojis(x, y){
+    const count = 14;
+    for(let i=0; i<count; i++){
+      const el = document.createElement('div');
+      el.className = 'burst-particle';
+      const useGold = Math.random() > 0.25;
+      const color = useGold
+        ? burstGold[Math.floor(Math.random()*burstGold.length)]
+        : burstColors[Math.floor(Math.random()*burstColors.length)];
+      const size = 15 + Math.random()*13;
+      el.innerHTML = burstShapeSVG(size, color);
+      const angle = (Math.PI * 2 * i) / count + (Math.random()-0.5)*0.6;
+      const distance = 65 + Math.random()*95;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.setProperty('--dx', (Math.cos(angle)*distance) + 'px');
+      el.style.setProperty('--dy', (Math.sin(angle)*distance) + 'px');
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 500);
+    }
+  }
+  document.addEventListener('click', (e) => {
+    burstEmojis(e.clientX, e.clientY);
+  });
+
   copyBtn.addEventListener('click', async () => {
     const text = buildText();
     if (!text) return;
     track(`copy_${currentDir}`, `복사: ${resultLabel.textContent}`);
+    // "복사"로 실제 확정한 시점에만 이 기기에 기억해둠 (그냥 눌러본 것까지 저장되지 않게)
+    if(currentDir === 'start' || currentDir === 'end'){
+      saveLoc(currentDir, currentLoc);
+    }
     try {
       await navigator.clipboard.writeText(text);
     } catch (e) {
@@ -1122,6 +1488,7 @@
       document.execCommand('copy');
       document.body.removeChild(ta);
     }
+    showFarewellPopup(currentDir);
     copyIcon.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
     copyIcon.classList.add('pop');
     copyBtnText.textContent = '복사 완! 팀즈에 붙여넣기 고고링~! 🚀';
@@ -1143,8 +1510,20 @@
     if(totalMin >= t1030 && totalMin < t1630) return 'break';
     return 'end';
   }
+  // 출근은 "아직 시작 안 한 시점"이라 지난 시각을 보여줄 수 없으니 항상 다음 30분 단위로 올림
+  // (예: 9:01 접속 → 9:30 출근) / 퇴근은 그 시점 근무가 이미 끝난 거라 가까운 쪽으로 반올림
+  function roundUpTo30(date){
+    const totalMin = date.getHours() * 60 + date.getMinutes();
+    const rounded = Math.ceil(totalMin / 30) * 30;
+    return { hour: Math.floor(rounded / 60) % 24, min: rounded % 60 };
+  }
+  function roundToNearest30(date){
+    const totalMin = date.getHours() * 60 + date.getMinutes();
+    const rounded = Math.round(totalMin / 30) * 30;
+    return { hour: Math.floor(rounded / 60) % 24, min: rounded % 60 };
+  }
   const autoBtn = dirGroup.querySelector(`[data-dir="${getAutoDir(today)}"]`);
-  if(autoBtn) autoBtn.click();
+  if(autoBtn) autoBtn.click(); // 클릭 핸들러 안에서 그 순간 시각 기준 반올림까지 같이 처리됨
 
   buildText();
 
