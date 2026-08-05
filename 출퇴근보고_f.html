@@ -31,6 +31,11 @@
     --shadow-btn-hover: 0 3px 10px rgba(0,0,0,0.13);
   }
   * { box-sizing: border-box; }
+  button{
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+  button:focus{ outline: none; }
   .hidden{ display:none !important; }
   .hint{
     font-weight:400;
@@ -99,12 +104,25 @@
     display: flex;
     gap: 7px;
   }
+  .end-step-panel{
+    margin-bottom: 18px;
+  }
+  .end-step-panel.hidden{ display: none; }
   .step-dots{
     display: flex;
     align-items: center;
-    margin-top: 14px;
+    margin-top: 2px;
   }
-  .step-dots.hidden{ display: none; }
+  .step-hint{
+    margin-top: 14px;
+    padding: 0 2px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+  .step-hint.hidden{ display: none; }
   .step-dot{
     display: flex;
     flex-direction: column;
@@ -129,22 +147,26 @@
     color: var(--ink-soft);
     font-size: 12px;
     font-weight: 800;
-    transition: all 0.15s ease;
+    transition: width 0.3s cubic-bezier(.34,1.3,.64,1), height 0.3s cubic-bezier(.34,1.3,.64,1),
+                background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, font-size 0.3s ease;
   }
   .step-dot-label{
     font-size: 9.5px;
     font-weight: 600;
     color: var(--ink-soft);
     white-space: nowrap;
+    transition: color 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease;
   }
   .step-dot.active .step-dot-num{
+    width: 34px;
+    height: 34px;
     background: #FF6B4A;
     border-color: #FF6B4A;
     color: #fff;
-    box-shadow: 0 2px 8px rgba(255,107,74,0.4);
-    transform: scale(1.08);
+    font-size: 15px;
+    box-shadow: 0 3px 10px rgba(255,107,74,0.45);
   }
-  .step-dot.active .step-dot-label{ color: #FF6B4A; font-weight: 800; }
+  .step-dot.active .step-dot-label{ color: #FF6B4A; font-weight: 800; font-size: 11.5px; }
   .step-dot.done .step-dot-num{
     background: #FFE3DA;
     border-color: #FF6B4A;
@@ -175,19 +197,18 @@
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
   .step-nav-prev{
-    background: #fff;
+    background: var(--neutral-bg);
     color: var(--ink-soft);
     border: 1.5px solid var(--neutral-line);
   }
-  .step-nav-prev:hover{ border-color: var(--ink-soft); color: var(--ink); }
+  .step-nav-prev:hover{ background: #ECE8DD; border-color: var(--ink-soft); color: var(--ink); }
   .step-nav-next{
-    background: #fff;
-    color: #FF6B4A;
+    background: #FFE3D8;
+    color: #C64A2E;
     border: 1.5px solid #FFCFC0;
   }
-  .step-nav-next:hover{ border-color: #FF6B4A; background: #FFF3EF; }
+  .step-nav-next:hover{ background: #FFD5C4; border-color: #FF6B4A; }
   .step-nav-next:active, .step-nav-prev:active{ transform: scale(0.98); }
-  #step1Nav .step-nav-next{ width: 100%; }
   .toggle-group.wrap-2{
     flex-wrap: wrap;
   }
@@ -238,6 +259,10 @@
     color:var(--ink-soft);
     text-align:center;
   }
+  #mainShortcutsRow{
+    margin-top:14px;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
   .quick-hours{
     display:grid;
     grid-template-columns: repeat(4, 1fr);
@@ -284,6 +309,18 @@
   .next-day-section .quick-hours button.more-btn.expanded{
     background:var(--accent);
     color:#fff;
+  }
+  #midBreakCustomBtn{
+    background:var(--accent-soft) !important;
+    border-color:var(--accent-soft) !important;
+    color:var(--accent) !important;
+    font-weight:700 !important;
+  }
+  #midBreakCustomBtn:hover{ border-color:var(--accent) !important; }
+  #midBreakCustomBtn.active{
+    background:var(--accent) !important;
+    border-color:var(--accent) !important;
+    color:#fff !important;
   }
   .hour-grid.hidden{
     display:none;
@@ -493,10 +530,6 @@
     box-shadow:0 1px 2px rgba(0,0,0,0.15);
   }
   .step-num.next{ background:#FF6B4A; }
-  #breakSection{
-    padding-top:10px;
-    padding-bottom:10px;
-  }
   #breakSection .section-title{
     margin-bottom:8px;
   }
@@ -696,7 +729,7 @@
     left: 0;
     top: 0;
     transform: translate(-50%, -50%);
-    animation: burstFly 0.5s cubic-bezier(.15,.85,.3,1) forwards;
+    animation: burstFly 0.6s cubic-bezier(.15,.85,.3,1) forwards;
   }
   @keyframes burstFly{
     0%{ transform: translate(-50%, -50%) scale(0.4) rotate(0deg); opacity: 1; }
@@ -722,11 +755,6 @@
     max-height: 220px;
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  }
-  @media (min-width: 700px){
-    .farewell-img{ max-width: 380px; max-height: 380px; }
-    .farewell-emoji{ font-size: 140px; }
-    .farewell-text{ font-size: 26px; }
   }
   .farewell-text{
     margin-top: 10px;
@@ -780,6 +808,16 @@
     opacity:0.75;
     text-align:center;
   }
+  .loc-memory-note{
+    margin-top:10px;
+    padding:0 4px;
+    font-size:10.5px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    opacity:0.75;
+    text-align:center;
+  }
+  .loc-memory-note.hidden{ display:none; }
   .footnote b{ color:var(--ink); font-weight:700; }
   .footnote .credit{
     display:inline-block;
@@ -846,12 +884,15 @@
       <button class="toggle-btn" data-dir="end">🌙 종료/퇴근</button>
     </div>
 
-    <div id="endStepDots" class="step-dots hidden">
-      <button type="button" class="step-dot" data-step="1"><span class="step-dot-num">1</span><span class="step-dot-label">근무 종료</span></button>
-      <div class="step-dot-line"></div>
-      <button type="button" class="step-dot" data-step="2"><span class="step-dot-num">2</span><span class="step-dot-label">부가 정보</span></button>
-      <div class="step-dot-line"></div>
-      <button type="button" class="step-dot" data-step="3"><span class="step-dot-num">3</span><span class="step-dot-label">다음 근무</span></button>
+    <div id="endStepHint" class="step-hint hidden">필요한 정보만 추가하면 돼요 — 1단계만 하고 바로 복사해도 괜찮아요</div>
+    <div id="endStepPanel" class="end-step-panel hidden">
+      <div id="endStepDots" class="step-dots">
+        <button type="button" class="step-dot" data-step="1"><span class="step-dot-num">1</span><span class="step-dot-label">근무 종료</span></button>
+        <div class="step-dot-line"></div>
+        <button type="button" class="step-dot" data-step="2"><span class="step-dot-num">2</span><span class="step-dot-label">부가 정보</span></button>
+        <div class="step-dot-line"></div>
+        <button type="button" class="step-dot" data-step="3"><span class="step-dot-num">3</span><span class="step-dot-label">다음 근무</span></button>
+      </div>
     </div>
 
     <div id="mainTimeSection" class="chapter-box time-box">
@@ -861,14 +902,17 @@
         <span id="mainTimeSummary">시간: <b>9:00</b></span>
         <button type="button" id="mainTimeEditBtn" class="edit-btn">변경하기</button>
       </div>
+      <div class="quick-hours" id="mainShortcutsRow"></div>
       <div id="mainTimeDetailWrap" class="hidden">
-        <div class="quick-hours" id="quickHours"></div>
-        <div class="hour-grid hidden" id="hourGrid"></div>
+        <div class="hour-stepper">
+          <button type="button" id="mainTimeHourMinus">−</button>
+          <span id="mainTimeHourDisplay" class="hour-stepper-display">9시</span>
+          <button type="button" id="mainTimeHourPlus">+</button>
+        </div>
         <div class="min-toggle" id="minToggle">
           <button type="button" data-min="0">:00</button>
           <button type="button" data-min="30">:30</button>
         </div>
-        <button type="button" id="mainTimeConfirmBtn" class="today-start-confirm confirm-block">확인</button>
       </div>
 
       <div id="locSection">
@@ -879,7 +923,7 @@
         </div>
       </div>
       <div class="step-nav" id="step1Nav">
-        <button type="button" class="step-nav-next" id="step1NextBtn">다음 →</button>
+        <button type="button" class="step-nav-next" id="step1NextBtn">부가 정보 →</button>
       </div>
     </div>
 
@@ -914,13 +958,12 @@
     </div>
 
     <div id="breakSection" class="break-section hidden">
-      <div class="section-title"><span class="step-num">2</span>부가 정보</div>
       <div class="today-start-bar" id="todayStartBar" style="margin-top:0;">
-        <span id="todayStartSummary">오늘 출근: <b>9:00</b> (기본)</span>
+        <span id="todayStartSummary">오늘 출근 시간: <b>9:00</b> (기본)</span>
         <button type="button" id="todayStartEditBtn" class="edit-btn">변경하기</button>
       </div>
       <div id="todayStartDetailWrap" class="hidden">
-        <div class="detail-label">오늘 출근 시각</div>
+        <div class="detail-label">오늘 출근 시간</div>
         <div class="hour-stepper">
           <button type="button" id="todayStartHourMinus">−</button>
           <span id="todayStartHourDisplay" class="hour-stepper-display">9시</span>
@@ -930,7 +973,6 @@
           <button type="button" data-min="0">:00</button>
           <button type="button" data-min="30">:30</button>
         </div>
-        <button type="button" id="todayStartConfirmBtn" class="today-start-confirm confirm-block">확인</button>
       </div>
 
       <div class="today-start-bar" id="breakBar">
@@ -948,29 +990,34 @@
           <button class="toggle-btn active" data-lunch="yes">🍱 점심 포함</button>
           <button class="toggle-btn" data-lunch="no">🚫 점심 없이</button>
         </div>
-        <button type="button" id="breakConfirmBtn" class="today-start-confirm confirm-block">확인</button>
       </div>
       <div class="step-nav" id="step2Nav">
-        <button type="button" class="step-nav-prev" id="step2PrevBtn">← 이전</button>
-        <button type="button" class="step-nav-next" id="step2NextBtn">다음 →</button>
+        <button type="button" class="step-nav-prev" id="step2PrevBtn">← 근무 종료</button>
+        <button type="button" class="step-nav-next" id="step2NextBtn">다음 근무 →</button>
       </div>
     </div>
 
     <div id="nextDaySection" class="next-day-section hidden">
-      <div class="section-title next"><span class="step-num next">3</span>다음 근무 시작</div>
       <div class="today-start-bar" id="nextDateBar">
         <span id="nextDayLabel">-</span>
         <button type="button" id="nextDateEditBtn" class="edit-btn">변경하기</button>
       </div>
       <input type="date" id="nextWorkDateInput" class="custom-input compact-input hidden">
-      <button type="button" id="nextDateConfirmBtn" class="today-start-confirm hidden">확인</button>
 
-      <label>출근 시간</label>
-      <div class="quick-hours compact" id="quickHoursNext"></div>
-      <div class="hour-grid hidden" id="hourGridNext"></div>
-      <div class="min-toggle" id="minToggleNext">
-        <button type="button" data-min="0">:00</button>
-        <button type="button" data-min="30">:30</button>
+      <div class="today-start-bar" id="nextTimeBar">
+        <span id="nextTimeSummary">내일 출근 시간: <b>9:00</b> (기본)</span>
+        <button type="button" id="nextTimeEditBtn" class="edit-btn">변경하기</button>
+      </div>
+      <div id="nextTimeDetailWrap" class="hidden">
+        <div class="hour-stepper">
+          <button type="button" id="nextTimeHourMinus">−</button>
+          <span id="nextTimeHourDisplay" class="hour-stepper-display">9시</span>
+          <button type="button" id="nextTimeHourPlus">+</button>
+        </div>
+        <div class="min-toggle" id="minToggleNext">
+          <button type="button" data-min="0">:00</button>
+          <button type="button" data-min="30">:30</button>
+        </div>
       </div>
 
       <label>근무 형태</label>
@@ -979,7 +1026,7 @@
         <button class="toggle-btn" data-loc="office">🏢 사무실</button>
       </div>
       <div class="step-nav" id="step3Nav">
-        <button type="button" class="step-nav-prev" id="step3PrevBtn">← 이전</button>
+        <button type="button" class="step-nav-prev" id="step3PrevBtn">← 부가 정보</button>
       </div>
     </div>
 
@@ -992,6 +1039,7 @@
         <span class="copy-icon" id="copyIcon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>
         <span id="copyBtnText">형 나 출근하네...</span>
       </button>
+      <div id="locMemoryNote" class="loc-memory-note hidden">📱 방금 고른 근무 형태, 다음에 열 때도 자동으로 선택돼요</div>
     </div>
   </div>
 
@@ -1049,6 +1097,7 @@
   const preview = document.getElementById('preview');
   const resultLabel = document.getElementById('resultLabel');
   const copyBtn = document.getElementById('copyBtn');
+  const locMemoryNote = document.getElementById('locMemoryNote');
   const copyBtnText = document.getElementById('copyBtnText');
   const copyIcon = document.getElementById('copyIcon');
   const dateDisplay = document.getElementById('dateDisplay');
@@ -1107,29 +1156,29 @@
 
   const nextWorkDateInput = document.getElementById('nextWorkDateInput');
   const nextDateEditBtn = document.getElementById('nextDateEditBtn');
-  const nextDateConfirmBtn = document.getElementById('nextDateConfirmBtn');
   nextWorkDateInput.value = toDateInputValue(nextWorkDate);
 
   const nextDateBar = document.getElementById('nextDateBar');
   nextDateEditBtn.addEventListener('click', () => {
-    nextDateBar.classList.add('hidden');
-    nextDateConfirmBtn.classList.remove('hidden');
-    openTimePicker(nextWorkDateInput);
-  });
-
-  nextDateConfirmBtn.addEventListener('click', () => {
-    nextWorkDateInput.classList.add('hidden');
-    nextDateConfirmBtn.classList.add('hidden');
-    nextDateBar.classList.remove('hidden');
+    const nowHidden = nextWorkDateInput.classList.toggle('hidden');
+    if(!nowHidden) openTimePicker(nextWorkDateInput);
   });
 
   // 종료/퇴근 3단계 마법사 — 근무 종료 → 휴게 사용 → 다음 근무 시작(+결과) 순서로 한 화면씩
+  const endStepPanel = document.getElementById('endStepPanel');
   const endStepDots = document.getElementById('endStepDots');
+  const endStepHint = document.getElementById('endStepHint');
   const resultBlock = document.getElementById('resultBlock');
   const step1Nav = document.getElementById('step1Nav');
   const step2Nav = document.getElementById('step2Nav');
   const step3Nav = document.getElementById('step3Nav');
   let endStep = 1;
+
+  const endStepNames = { 1: '근무 종료', 2: '부가 정보', 3: '다음 근무' };
+  const step1NextBtn = document.getElementById('step1NextBtn');
+  const step2PrevBtn = document.getElementById('step2PrevBtn');
+  const step2NextBtn = document.getElementById('step2NextBtn');
+  const step3PrevBtn = document.getElementById('step3PrevBtn');
 
   function showEndStep(step){
     endStep = step;
@@ -1140,27 +1189,35 @@
     step1Nav.classList.toggle('hidden', step !== 1);
     step2Nav.classList.toggle('hidden', step !== 2);
     step3Nav.classList.toggle('hidden', step !== 3);
+    // 이전/다음 버튼에 "이전"/"다음" 대신 실제 그 단계 이름을 보여줌
+    step1NextBtn.textContent = `${endStepNames[2]} →`;
+    step2PrevBtn.textContent = `← ${endStepNames[1]}`;
+    step2NextBtn.textContent = `${endStepNames[3]} →`;
+    step3PrevBtn.textContent = `← ${endStepNames[2]}`;
     endStepDots.querySelectorAll('.step-dot').forEach(dot=>{
       const n = parseInt(dot.dataset.step);
       dot.classList.toggle('active', n === step);
       dot.classList.toggle('done', n < step);
     });
+    // 안내문구+점 네비게이션을 지금 보이는 챕터 박스 맨 위로 옮겨서 하나의 박스처럼 보이게
+    const targetSection = step === 1 ? mainTimeSection : step === 2 ? breakSection : nextDaySection;
+    targetSection.insertBefore(endStepPanel, targetSection.firstChild);
     buildText(); // 어느 단계로 이동하든 결과를 최신 상태로 갱신
   }
 
   endStepDots.querySelectorAll('.step-dot').forEach(dot=>{
     dot.addEventListener('click', () => showEndStep(parseInt(dot.dataset.step)));
   });
-  document.getElementById('step1NextBtn').addEventListener('click', () => showEndStep(2));
-  document.getElementById('step2PrevBtn').addEventListener('click', () => showEndStep(1));
-  document.getElementById('step2NextBtn').addEventListener('click', () => showEndStep(3));
-  document.getElementById('step3PrevBtn').addEventListener('click', () => showEndStep(2));
+  step1NextBtn.addEventListener('click', () => showEndStep(2));
+  step2PrevBtn.addEventListener('click', () => showEndStep(1));
+  step2NextBtn.addEventListener('click', () => showEndStep(3));
+  step3PrevBtn.addEventListener('click', () => showEndStep(2));
 
   function updateNextDayLabel(isAutoUnchanged){
     const nDayName2 = days[nextWorkDate.getDay()];
     const dateStr = `${nextWorkDate.getMonth()+1}/${nextWorkDate.getDate()}(${nDayName2})`;
     const note = (isAutoUnchanged && wasFridayAuto) ? '<span class="auto-note">⏰ 금요일이라 다음 주 월요일로 자동 계산되었어요</span>' : '';
-    nextDayLabel.innerHTML = `<b>${dateStr}</b>${note}`;
+    nextDayLabel.innerHTML = `내일 출근일: <b>${dateStr}</b>${note}`;
   }
   updateNextDayLabel(true);
 
@@ -1170,64 +1227,6 @@
     updateNextDayLabel(false);
     buildText();
   });
-
-  // 시간 선택기(자주 쓰는 시간 + 더보기 그리드 + 분 토글)를 세팅하는 공용 함수
-  // 시(퀵버튼+더보기 그리드)만 다시 그리는 함수 — 구분에 따라 다른 시간대 세트를 보여줄 때 재호출
-  function buildHourButtons(quickHoursEl, hourGridEl, state, onChange, quickGroups, extraButtons){
-    quickHoursEl.innerHTML = '';
-    hourGridEl.innerHTML = '';
-    function selectHour(h){
-      state.hour = h;
-      quickHoursEl.querySelectorAll('button[data-hour]').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.hour) === h));
-      hourGridEl.querySelectorAll('button[data-hour]').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.hour) === h));
-      onChange();
-    }
-    quickGroups.forEach(hours=>{
-      hours.forEach(h=>{
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = `${h}시`;
-        btn.dataset.hour = h;
-        if(h === state.hour) btn.classList.add('active');
-        btn.addEventListener('click', ()=>{ track(`hour_${h}`, `시간 버튼: ${h}시`); selectHour(h); });
-        quickHoursEl.appendChild(btn);
-      });
-    });
-    // 개인화 단축 버튼(예: 특정 동료의 자주 쓰는 출근 시각) — 시간 그리드 칸을 그대로 재사용
-    (extraButtons || []).forEach(spec=>{
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = spec.label;
-      btn.className = spec.className || '';
-      if(spec.disabled) btn.disabled = true;
-      if(spec.onClick) btn.addEventListener('click', ()=>{
-        if(!spec.disabled) track(`shortcut_${spec.label}`, `단축버튼: ${spec.label}`);
-        spec.onClick();
-      });
-      quickHoursEl.appendChild(btn);
-    });
-    const moreBtn = document.createElement('button');
-    moreBtn.type = 'button';
-    moreBtn.className = 'more-btn';
-    moreBtn.textContent = '더보기';
-    moreBtn.addEventListener('click', ()=>{
-      const isHidden = hourGridEl.classList.toggle('hidden');
-      moreBtn.textContent = isHidden ? '더보기' : '접기';
-      moreBtn.classList.toggle('expanded', !isHidden);
-    });
-    quickHoursEl.appendChild(moreBtn);
-
-    for(let h=6; h<=27; h++){
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = h;
-      btn.dataset.hour = h;
-      if(h === state.hour) btn.classList.add('active');
-      btn.addEventListener('click', ()=> selectHour(h));
-      hourGridEl.appendChild(btn);
-    }
-    return selectHour;
-  }
 
   // 분(:00/:30) 버튼은 재생성되지 않는 고정 버튼이라 최초 1회만 바인딩
   function bindMinToggle(minToggleEl, state, onChange){
@@ -1241,36 +1240,44 @@
     });
   }
 
-  const quickHoursEl = document.getElementById('quickHours');
-  const hourGridEl = document.getElementById('hourGrid');
   const minToggleEl = document.getElementById('minToggle');
   const mainTimeBar = document.getElementById('mainTimeBar');
   const mainTimeSummary = document.getElementById('mainTimeSummary');
   const mainTimeEditBtn = document.getElementById('mainTimeEditBtn');
   const mainTimeDetailWrap = document.getElementById('mainTimeDetailWrap');
-  const mainTimeConfirmBtn = document.getElementById('mainTimeConfirmBtn');
+  const mainTimeHourDisplay = document.getElementById('mainTimeHourDisplay');
 
   function updateMainTimeSummary(){
     const label = currentDir === 'end' ? '종료' : '시간';
-    mainTimeSummary.innerHTML = `${label}: <b>${timeState.hour}:${pad2(timeState.min)}</b>${mainTimeAutoNote ? '<span class="auto-note">⏰ 가까운 시간으로 자동 설정되었어요</span>' : ''}`;
+    const displayH = currentDir === 'end' ? displayEndHour(timeState.hour) : timeState.hour;
+    mainTimeSummary.innerHTML = `${label}: <b>${displayH}:${pad2(timeState.min)}</b>${mainTimeAutoNote ? '<span class="auto-note">⏰ 가까운 시간으로 자동 설정되었어요</span>' : ''}`;
   }
   function mainTimeUserChanged(){
     mainTimeAutoNote = false;
     buildText();
   }
+  function updateMainTimeHourDisplay(){
+    const displayH = currentDir === 'end' ? displayEndHour(timeState.hour) : timeState.hour;
+    mainTimeHourDisplay.textContent = `${displayH}시`;
+  }
+  // 챕터1은 출근/퇴근 둘 다 커버해야 해서 스테퍼 범위를 하루 전체(0~23시)로 넓게 잡음
+  function selectMainTimeHour(h){
+    timeState.hour = Math.min(23, Math.max(0, h));
+    updateMainTimeHourDisplay();
+    mainTimeUserChanged();
+  }
+  document.getElementById('mainTimeHourMinus').addEventListener('click', () => selectMainTimeHour(timeState.hour - 1));
+  document.getElementById('mainTimeHourPlus').addEventListener('click', () => selectMainTimeHour(timeState.hour + 1));
+  updateMainTimeHourDisplay();
+  bindMinToggle(minToggleEl, timeState, mainTimeUserChanged);
+
   function collapseMainTime(){
     mainTimeDetailWrap.classList.add('hidden');
     mainTimeBar.classList.remove('hidden');
     updateMainTimeSummary();
   }
-  mainTimeEditBtn.addEventListener('click', () => {
-    mainTimeBar.classList.add('hidden');
-    mainTimeDetailWrap.classList.remove('hidden');
-  });
-  mainTimeConfirmBtn.addEventListener('click', collapseMainTime);
+  bindEditToggle(mainTimeEditBtn, mainTimeDetailWrap, updateMainTimeSummary);
 
-  const quickHoursNextEl = document.getElementById('quickHoursNext');
-  const hourGridNextEl = document.getElementById('hourGridNext');
   const minToggleNextEl = document.getElementById('minToggleNext');
 
   // 개인화 단축 버튼 팩토리 — 어느 시간 선택기(오늘 출근/다음 근무 시작 등)에 붙일지에 맞게
@@ -1298,6 +1305,23 @@
     });
   }
 
+  // MH/IC/J 같은 단축버튼을 "변경하기" 없이 상시 노출되는 행에 그림 + 맨 끝에 더보기(=상세 피커 펼치기) 버튼
+  function buildShortcutsRow(container, presets, getSelectHour, state, minToggleElRef, setLoc, locGroupElRef){
+    container.innerHTML = '';
+    makeShortcutButtons(presets, getSelectHour, state, minToggleElRef, setLoc, locGroupElRef).forEach(spec=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = spec.label;
+      btn.className = spec.className || '';
+      if(spec.disabled) btn.disabled = true;
+      if(spec.onClick) btn.addEventListener('click', ()=>{
+        if(!spec.disabled) track(`shortcut_${spec.label}`, `단축버튼: ${spec.label}`);
+        spec.onClick();
+      });
+      container.appendChild(btn);
+    });
+  }
+
   // 자주 쓰는 출근 시각 프리셋 — "오늘 출근"과 "다음 근무 시작" 둘 다 같은 개념(내 출근 시간)이라 동일하게 재사용
   const startPresets = [
     { label: '👧MH', hour: 7, min: 30, loc: 'home' },
@@ -1305,20 +1329,51 @@
     { label: '🐣J', hour: 9, min: 30, loc: 'office' },
   ];
 
-  // 출근 시간대 세트(오전+개인화 단축버튼), 종료/퇴근 선택 시 오후 세트로 교체됨
-  let selectMainHour = buildHourButtons(
-    quickHoursEl, hourGridEl, timeState, mainTimeUserChanged, [[7,8,9,10]],
-    makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; }, locGroup)
-  );
-  bindMinToggle(minToggleEl, timeState, mainTimeUserChanged);
+  // 출근 시간대 — 스테퍼가 항상 존재하는 고정 UI라 재생성 필요 없음, selectMainHour는 그 setter를 그대로 가리킴
+  let selectMainHour = selectMainTimeHour;
 
-  const selectNextHour = buildHourButtons(
-    quickHoursNextEl, hourGridNextEl, nextTimeState, buildText, [[7,8,9,10]],
-    makeShortcutButtons(startPresets, () => selectNextHour, nextTimeState, minToggleNextEl, (loc)=>{ nextLoc = loc; }, locGroupNext)
+  const mainShortcutsRow = document.getElementById('mainShortcutsRow');
+  buildShortcutsRow(
+    mainShortcutsRow, startPresets, () => selectMainHour, timeState, minToggleEl,
+    (loc)=>{ currentLoc = loc; }, locGroup
   );
-  bindMinToggle(minToggleNextEl, nextTimeState, buildText);
 
   function pad2(n){ return String(n).padStart(2,'0'); }
+  const nextTimeBar = document.getElementById('nextTimeBar');
+  const nextTimeSummary = document.getElementById('nextTimeSummary');
+  const nextTimeEditBtn = document.getElementById('nextTimeEditBtn');
+  const nextTimeDetailWrap = document.getElementById('nextTimeDetailWrap');
+  const nextTimeHourDisplay = document.getElementById('nextTimeHourDisplay');
+
+  function updateNextTimeSummary(){
+    const isDefault = nextTimeState.hour === 9 && nextTimeState.min === 0;
+    nextTimeSummary.innerHTML = `내일 출근 시간: <b>${nextTimeState.hour}:${pad2(nextTimeState.min)}</b>${isDefault ? ' (기본)' : ''}`;
+  }
+  function updateNextTimeHourDisplay(){
+    nextTimeHourDisplay.textContent = `${nextTimeState.hour}시`;
+  }
+  function selectNextTimeHour(h){
+    nextTimeState.hour = Math.min(12, Math.max(5, h));
+    updateNextTimeHourDisplay();
+    updateNextTimeSummary();
+    buildText();
+  }
+  document.getElementById('nextTimeHourMinus').addEventListener('click', () => selectNextTimeHour(nextTimeState.hour - 1));
+  document.getElementById('nextTimeHourPlus').addEventListener('click', () => selectNextTimeHour(nextTimeState.hour + 1));
+  updateNextTimeHourDisplay();
+
+  minToggleNextEl.querySelectorAll('button').forEach(btn=>{
+    if(parseInt(btn.dataset.min) === nextTimeState.min) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      minToggleNextEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b === btn));
+      nextTimeState.min = parseInt(btn.dataset.min);
+      updateNextTimeSummary();
+      buildText();
+    });
+  });
+
+  bindEditToggle(nextTimeEditBtn, nextTimeDetailWrap, updateNextTimeSummary);
+  updateNextTimeSummary();
 
   function openTimePicker(input){
     input.classList.remove('hidden');
@@ -1327,6 +1382,14 @@
     } else {
       input.focus();
     }
+  }
+
+  // 공용 "변경하기" 토글 — 요약바는 항상 그대로 두고, 그 아래에 상세 내용만 열고 닫음(다시 누르면 닫힘)
+  function bindEditToggle(editBtn, detailWrap, onClose){
+    editBtn.addEventListener('click', () => {
+      const nowHidden = detailWrap.classList.toggle('hidden');
+      if(nowHidden && onClose) onClose();
+    });
   }
 
   function typeLabel(loc, dir) {
@@ -1338,6 +1401,11 @@
 
   function formatTime(h, m) {
     return `${h}:${String(m).padStart(2,'0')}`;
+  }
+
+  // 새벽 0~3시는 "그날 늦게까지 이어진 근무"로 보고 24~27시로 표기 (근무 종료에서만 사용)
+  function displayEndHour(h){
+    return h < 4 ? h + 24 : h;
   }
 
   function formatH(n){
@@ -1369,9 +1437,12 @@
   }
 
   function buildText() {
-    const timeStr = formatTime(timeState.hour, timeState.min);
+    const timeStr = currentDir === 'end'
+      ? formatTime(displayEndHour(timeState.hour), timeState.min)
+      : formatTime(timeState.hour, timeState.min);
     if(currentDir === 'start' || currentDir === 'end') updateMainTimeSummary();
     resultLabel.textContent = currentDir === 'break' ? '휴게 알림' : (currentDir === 'end' ? '퇴근 보고' : '출근 보고');
+    locMemoryNote.classList.toggle('hidden', currentDir === 'break');
     copyBtnText.textContent = currentDir === 'break' ? midBreakCopyText() : (currentDir === 'end' ? '안녕히 계세요 여러분~!' : '형 나 출근하네...');
     let text;
     if(currentDir === 'break'){
@@ -1436,14 +1507,13 @@
 
   const todayStartSummary = document.getElementById('todayStartSummary');
   const todayStartEditBtn = document.getElementById('todayStartEditBtn');
-  const todayStartConfirmBtn = document.getElementById('todayStartConfirmBtn');
   const todayStartDetailWrap = document.getElementById('todayStartDetailWrap');
   const todayStartBar = document.getElementById('todayStartBar');
   const todayStartHourDisplay = document.getElementById('todayStartHourDisplay');
 
   function updateTodayStartSummary(){
     const isDefault = todayStartState.hour === 9 && todayStartState.min === 0;
-    todayStartSummary.innerHTML = `오늘 출근: <b>${todayStartState.hour}:${pad2(todayStartState.min)}</b>${isDefault ? ' (기본)' : ''}`;
+    todayStartSummary.innerHTML = `오늘 출근 시간: <b>${todayStartState.hour}:${pad2(todayStartState.min)}</b>${isDefault ? ' (기본)' : ''}`;
     return isDefault;
   }
   function updateTodayStartHourDisplay(){
@@ -1469,20 +1539,10 @@
     });
   });
 
-  todayStartEditBtn.addEventListener('click', () => {
-    todayStartBar.classList.add('hidden');
-    todayStartDetailWrap.classList.remove('hidden');
-  });
-
-  todayStartConfirmBtn.addEventListener('click', () => {
-    todayStartDetailWrap.classList.add('hidden');
-    todayStartBar.classList.remove('hidden');
-    updateTodayStartSummary();
-  });
+  bindEditToggle(todayStartEditBtn, todayStartDetailWrap, updateTodayStartSummary);
 
   const breakSummary = document.getElementById('breakSummary');
   const breakEditBtn = document.getElementById('breakEditBtn');
-  const breakConfirmBtn = document.getElementById('breakConfirmBtn');
   const breakDetailWrap = document.getElementById('breakDetailWrap');
   const breakBar = document.getElementById('breakBar');
   const breakHourDisplay = document.getElementById('breakHourDisplay');
@@ -1505,16 +1565,7 @@
   document.getElementById('breakHourPlus').addEventListener('click', () => selectBreakHours(breakHours + 0.5));
   updateBreakHourDisplay();
 
-  breakEditBtn.addEventListener('click', () => {
-    breakBar.classList.add('hidden');
-    breakDetailWrap.classList.remove('hidden');
-  });
-
-  breakConfirmBtn.addEventListener('click', () => {
-    breakDetailWrap.classList.add('hidden');
-    breakBar.classList.remove('hidden');
-    updateBreakSummary();
-  });
+  bindEditToggle(breakEditBtn, breakDetailWrap, updateBreakSummary);
 
   lunchGroup.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1538,12 +1589,15 @@
       mainTimeSectionTitle.innerHTML = isEnd
         ? '<span class="step-num">1</span>근무 종료'
         : '<span class="step-num">1</span>출근 시간';
+      mainTimeSectionTitle.classList.toggle('hidden', isEnd); // 종료/퇴근은 점 네비게이션이 이미 같은 정보를 보여주니 중복 제거
       mainTimeSection.classList.toggle('dir-start', !isEnd);
       mainTimeSection.classList.toggle('dir-end', isEnd);
       if(isEnd){
-        endStepDots.classList.remove('hidden');
+        endStepPanel.classList.remove('hidden');
+        endStepHint.classList.remove('hidden');
       } else {
-        endStepDots.classList.add('hidden');
+        endStepPanel.classList.add('hidden');
+        endStepHint.classList.add('hidden');
         step1Nav.classList.add('hidden');
         step2Nav.classList.add('hidden');
         step3Nav.classList.add('hidden');
@@ -1557,12 +1611,15 @@
         currentLoc = getSavedLoc(currentDir) || 'home';
         locGroup.querySelectorAll('.toggle-btn').forEach(b=> b.classList.toggle('active', b.dataset.loc === currentLoc));
 
-        // 종료/퇴근은 오후 시간대+빈 커스텀 슬롯, 출근은 오전 시간대+개인화 단축버튼으로 시간 버튼 재구성
-        const groups = isEnd ? [[17,18,19]] : [[7,8,9,10]];
-        const extras = isEnd
-          ? []
-          : makeShortcutButtons(startPresets, () => selectMainHour, timeState, minToggleEl, (loc)=>{ currentLoc = loc; }, locGroup);
-        selectMainHour = buildHourButtons(quickHoursEl, hourGridEl, timeState, mainTimeUserChanged, groups, extras);
+        // 변경하기는 이제 항상 요약바에만 있음(단축버튼 줄엔 안 넣음) — 어느 탭이든 하나의 디자인으로 통일
+        mainTimeEditBtn.classList.remove('hidden');
+        mainShortcutsRow.classList.toggle('hidden', isEnd);
+        if(!isEnd){
+          buildShortcutsRow(
+            mainShortcutsRow, startPresets, () => selectMainHour, timeState, minToggleEl,
+            (loc)=>{ currentLoc = loc; }, locGroup
+          );
+        }
         // 탭에 들어올 때마다 "그 순간" 실제 시각 기준으로 다시 자동 세팅 (고정 9시/18시가 아니라)
         const nowRounded = isEnd ? roundToNearest30(new Date()) : roundUpTo30(new Date());
         selectMainHour(nowRounded.hour);
@@ -1575,20 +1632,24 @@
           // 값은 그대로 유지하되, 화면은 탭에 들어올 때마다 항상 요약(접힌) 상태로 리셋
           updateTodayStartHourDisplay();
           todayStartDetailWrap.classList.add('hidden');
-          todayStartBar.classList.remove('hidden');
           updateTodayStartSummary();
 
           updateBreakHourDisplay();
           breakDetailWrap.classList.add('hidden');
-          breakBar.classList.remove('hidden');
           updateBreakSummary();
 
           nextWorkDateInput.classList.add('hidden');
-          nextDateConfirmBtn.classList.add('hidden');
-          nextDateBar.classList.remove('hidden');
+
+          nextTimeDetailWrap.classList.add('hidden');
+          updateNextTimeSummary();
 
           showEndStep(1);
         }
+      } else {
+        // 휴게 탭: 11시~13시 사이에 들어왔으면 "점심"을 기본으로, 아니면 평소처럼 "휴게"
+        const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+        const isLunchTime = nowMin >= 11 * 60 && nowMin < 13 * 60;
+        selectMidBreakType(isLunchTime ? 'lunch' : 'general');
       }
       buildText();
     });
@@ -1596,16 +1657,18 @@
 
   const transitionNoneBtn = document.getElementById('transitionNoneBtn');
 
+  function selectMidBreakType(type){
+    midBreakTypeGroup.querySelectorAll('.toggle-btn').forEach(b=> b.classList.toggle('active', b.dataset.type === type));
+    midBreakType = type;
+    // 시간 선택은 "휴게"일 때만 필요, 전환(위치) 선택은 종류와 무관하게 항상 필요
+    const isGeneral = midBreakType === 'general';
+    midBreakDurationWrap.classList.toggle('hidden', !isGeneral);
+    transitionNoneBtn.textContent = isGeneral ? '일반 휴게' : '점심 없이';
+  }
   midBreakTypeGroup.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      midBreakTypeGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      midBreakType = btn.dataset.type;
+      selectMidBreakType(btn.dataset.type);
       track(`break_type_${midBreakType}`, `휴게 종류: ${btn.textContent.trim()}`);
-      // 시간 선택은 "휴게"일 때만 필요, 전환(위치) 선택은 종류와 무관하게 항상 필요
-      const isGeneral = midBreakType === 'general';
-      midBreakDurationWrap.classList.toggle('hidden', !isGeneral);
-      transitionNoneBtn.textContent = isGeneral ? '일반 휴게' : '점심 없이';
       buildText();
     });
   });
@@ -1642,7 +1705,6 @@
 
   // 복사 성공하면 버튼 위치에서 이모지가 팡 터지는 축하 이펙트
   // 화면 아무 데나 터치/클릭할 때마다 별·컨페티가 팡 터지는 이펙트
-  const burstColors = ['#00B1CC', '#FF6B4A', '#F2A93B', '#8B7FD6', '#2F9E5B'];
   // 종료/퇴근 복사 시 등장 → 커짐 → 페이드아웃하는 작별 인사 연출
   const farewellOverlay = document.getElementById('farewellOverlay');
   let farewellTimer = null;
@@ -1656,6 +1718,10 @@
     break: { emoji: '🐹', text: '그대는.. 그뭐냐.. 그거다.', color: '#8B7FD6', image: 'IMG_2710.jpg' },
     end: { emoji: '🙌', text: '안녕히 계세요 여러분~!', color: '#FF6B4A', image: 'KYwD1TQLozn5VAK7fUOV3aOe7Ak.png' }
   };
+  // 첫 복사 때 이미지가 아직 다운로드 전이라 크기를 몰라 위치가 잠깐 튀는 문제 방지 — 미리 불러와 캐싱
+  Object.values(farewellContent).forEach(c=>{
+    if(c.image){ const preload = new Image(); preload.src = c.image; }
+  });
   function showFarewellPopup(dir){
     const content = farewellContent[dir];
     if(!content) return;
@@ -1676,10 +1742,8 @@
     const card = farewellOverlay.querySelector('.farewell-card');
     // 복사 버튼 바로 위 지점에 고정 배치 (화면 정중앙이 아니라)
     const btnRect = copyBtn.getBoundingClientRect();
-    const isDesktopSize = window.innerWidth >= 700;
-    const maxImgSize = isDesktopSize ? 380 : 220;
     let topPos = btnRect.top - 14;
-    const minTop = maxImgSize + 50; // 이미지+문구가 화면 위로 잘리지 않게 최소 여백 확보
+    const minTop = 270; // 이미지+문구가 화면 위로 잘리지 않게 최소 여백 확보
     if(topPos < minTop) topPos = minTop;
     card.style.left = (btnRect.left + btnRect.width / 2) + 'px';
     card.style.top = topPos + 'px';
@@ -1691,38 +1755,38 @@
   }
 
   const burstGold = ['#F2C14E', '#F2A93B', '#E0B84B', '#FFD700'];
+  const moneyEmojis = ['💵','💰','💸','🪙'];
   function burstShapeSVG(size, color){
     const shapes = [
-      // 반짝이 별
-      `<svg viewBox="0 0 24 24" width="${size*1.6}" height="${size*1.6}"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="${color}"/></svg>`,
       // 동전 (테두리+중앙 원)
       `<svg viewBox="0 0 24 24" width="${size*1.5}" height="${size*1.5}"><circle cx="12" cy="12" r="11" fill="${color}" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff" stroke-width="1.3" opacity="0.85"/></svg>`,
       // 지폐
       `<svg viewBox="0 0 28 18" width="${size*2}" height="${size*1.3}"><rect x="0.5" y="0.5" width="27" height="17" rx="2.5" fill="${color}" stroke="#fff" stroke-width="1.3"/><circle cx="14" cy="9" r="4.2" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.85"/></svg>`,
-      // 폭죽 터짐(8방향)
-      `<svg viewBox="0 0 24 24" width="${size*1.7}" height="${size*1.7}"><g stroke="${color}" stroke-width="2.4" stroke-linecap="round"><path d="M12 2 L12 8"/><path d="M12 16 L12 22"/><path d="M2 12 L8 12"/><path d="M16 12 L22 12"/><path d="M4.9 4.9 L8.8 8.8"/><path d="M15.2 15.2 L19.1 19.1"/><path d="M4.9 19.1 L8.8 15.2"/><path d="M15.2 8.8 L19.1 4.9"/></g></svg>`,
     ];
     return shapes[Math.floor(Math.random()*shapes.length)];
   }
   function burstEmojis(x, y){
-    const count = 14;
+    const count = 20;
     for(let i=0; i<count; i++){
       const el = document.createElement('div');
       el.className = 'burst-particle';
-      const useGold = Math.random() > 0.25;
-      const color = useGold
-        ? burstGold[Math.floor(Math.random()*burstGold.length)]
-        : burstColors[Math.floor(Math.random()*burstColors.length)];
-      const size = 15 + Math.random()*13;
-      el.innerHTML = burstShapeSVG(size, color);
+      const size = 17 + Math.random()*14;
+      // 절반 이상은 진짜 돈 이모지로, 나머지는 동전/지폐 SVG로 — "진짜 돈 느낌" 위주
+      if(Math.random() > 0.35){
+        el.textContent = moneyEmojis[Math.floor(Math.random()*moneyEmojis.length)];
+        el.style.fontSize = (size + 8) + 'px';
+      } else {
+        const color = burstGold[Math.floor(Math.random()*burstGold.length)];
+        el.innerHTML = burstShapeSVG(size, color);
+      }
       const angle = (Math.PI * 2 * i) / count + (Math.random()-0.5)*0.6;
-      const distance = 65 + Math.random()*95;
+      const distance = 75 + Math.random()*110;
       el.style.left = x + 'px';
       el.style.top = y + 'px';
       el.style.setProperty('--dx', (Math.cos(angle)*distance) + 'px');
       el.style.setProperty('--dy', (Math.sin(angle)*distance) + 'px');
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 500);
+      setTimeout(() => el.remove(), 600);
     }
   }
   document.addEventListener('click', (e) => {
