@@ -1559,7 +1559,17 @@
       return `${formatTime(snap.hour, snap.min)} ${snap.loc === 'office' ? '출근' : '재택'}`;
     }
     if(dir === 'end'){
-      return `${formatTime(displayEndHour(snap.hour), snap.min)} ${snap.loc === 'office' ? '출근' : '재택'}`;
+      const parts = [`${formatTime(displayEndHour(snap.hour), snap.min)} ${snap.loc === 'office' ? '출근' : '재택'}`];
+      if(snap.todayStart){
+        parts.push(`${snap.todayStart.hour}:${pad2(snap.todayStart.min)}${snap.todayStart.loc === 'office' ? '출근' : '시작'}`);
+      }
+      if(snap.breakHours > 0) parts.push(`${formatHoursKorean(snap.breakHours)}휴게`);
+      if(snap.noLunch) parts.push('점심없이');
+      const nextIsDefault = snap.nextHour === 9 && snap.nextMin === 0 && snap.nextLoc === 'home';
+      if(!nextIsDefault){
+        parts.push(`내일${snap.nextHour}:${pad2(snap.nextMin)}${snap.nextLoc === 'office' ? '출근' : ''}`);
+      }
+      return parts.join(' · ');
     }
     if(snap.midBreakType === 'lunch'){
       if(snap.midBreakTransition === 'home') return '점심·재택전환';
