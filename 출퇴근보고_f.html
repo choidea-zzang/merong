@@ -309,18 +309,6 @@
     background:var(--accent);
     color:#fff;
   }
-  #midBreakCustomBtn{
-    background:var(--accent-soft) !important;
-    border-color:var(--accent-soft) !important;
-    color:var(--accent) !important;
-    font-weight:700 !important;
-  }
-  #midBreakCustomBtn:hover{ border-color:var(--accent) !important; }
-  #midBreakCustomBtn.active{
-    background:var(--accent) !important;
-    border-color:var(--accent) !important;
-    color:#fff !important;
-  }
   .hour-grid.hidden{
     display:none;
   }
@@ -612,9 +600,6 @@
     border-radius:var(--radius-md);
     border:1px solid var(--neutral-line);
   }
-  #midBreakCustomStepper{
-    margin-top: 14px;
-  }
   .hour-stepper{
     display:flex;
     align-items:center;
@@ -820,6 +805,40 @@
     text-align:center;
   }
   .loc-memory-note.hidden{ display:none; }
+  .recent-chips-wrap{
+    margin-top:14px;
+  }
+  .recent-chips-wrap.hidden{ display:none; }
+  .recent-chips-label{
+    font-size:11px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .recent-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .recent-chip{
+    padding:7px 12px;
+    border-radius:var(--radius-pill);
+    border:1.5px solid var(--neutral-line);
+    background:#fff;
+    color:var(--ink);
+    font-size:12px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    transition: all 0.15s ease;
+  }
+  .recent-chip:hover{ border-color:var(--accent); background:var(--accent-soft); }
+  .recent-chip:active{ transform:scale(0.96); }
+  .recent-chip.copied{
+    background:#2F9E5B;
+    border-color:#2F9E5B;
+    color:#fff;
+  }
   .footnote b{ color:var(--ink); font-weight:700; }
   .footnote .credit{
     display:inline-block;
@@ -908,12 +927,8 @@
       <div id="mainTimeDetailWrap" class="hidden">
         <div class="hour-stepper">
           <button type="button" id="mainTimeHourMinus">−</button>
-          <span id="mainTimeHourDisplay" class="hour-stepper-display">9시</span>
+          <span id="mainTimeHourDisplay" class="hour-stepper-display">9:00</span>
           <button type="button" id="mainTimeHourPlus">+</button>
-        </div>
-        <div class="min-toggle" id="minToggle">
-          <button type="button" data-min="0">:00</button>
-          <button type="button" data-min="30">:30</button>
         </div>
       </div>
 
@@ -939,17 +954,10 @@
 
       <div id="midBreakDurationWrap">
         <label>휴게 시간</label>
-        <div class="toggle-group" id="midBreakDurationGroup">
-          <button class="toggle-btn" data-break="0.5">0.5h</button>
-          <button class="toggle-btn active" data-break="1">1h</button>
-          <button class="toggle-btn" data-break="1.5">1.5h</button>
-          <button class="toggle-btn" data-break="2">2h</button>
-          <button class="toggle-btn" data-break="custom" id="midBreakCustomBtn">직접</button>
-        </div>
-        <div id="midBreakCustomStepper" class="hour-stepper hidden">
-          <button type="button" id="midBreakCustomMinus">−</button>
-          <span id="midBreakCustomDisplay" class="hour-stepper-display">0.5h</span>
-          <button type="button" id="midBreakCustomPlus">+</button>
+        <div class="hour-stepper">
+          <button type="button" id="midBreakDurationMinus">−</button>
+          <span id="midBreakDurationDisplay" class="hour-stepper-display">1h</span>
+          <button type="button" id="midBreakDurationPlus">+</button>
         </div>
       </div>
 
@@ -972,12 +980,8 @@
         <div class="detail-label">오늘 출근 시간</div>
         <div class="hour-stepper">
           <button type="button" id="todayStartHourMinus">−</button>
-          <span id="todayStartHourDisplay" class="hour-stepper-display">9시</span>
+          <span id="todayStartHourDisplay" class="hour-stepper-display">9:00</span>
           <button type="button" id="todayStartHourPlus">+</button>
-        </div>
-        <div class="min-toggle" id="todayStartMinToggle">
-          <button type="button" data-min="0">:00</button>
-          <button type="button" data-min="30">:30</button>
         </div>
         <div class="toggle-group" id="todayStartLocGroup" style="margin-top:14px;">
           <button class="toggle-btn active" data-loc="home">🏠 재택 (시작)</button>
@@ -1024,12 +1028,8 @@
       <div id="nextTimeDetailWrap" class="hidden">
         <div class="hour-stepper">
           <button type="button" id="nextTimeHourMinus">−</button>
-          <span id="nextTimeHourDisplay" class="hour-stepper-display">9시</span>
+          <span id="nextTimeHourDisplay" class="hour-stepper-display">9:00</span>
           <button type="button" id="nextTimeHourPlus">+</button>
-        </div>
-        <div class="min-toggle" id="minToggleNext">
-          <button type="button" data-min="0">:00</button>
-          <button type="button" data-min="30">:30</button>
         </div>
       </div>
 
@@ -1053,6 +1053,10 @@
         <span id="copyBtnText">형 나 출근하네...</span>
       </button>
       <div id="locMemoryNote" class="loc-memory-note hidden">📱 방금 고른 근무 형태, 다음에 열 때도 자동으로 선택돼요</div>
+      <div id="recentChipsWrap" class="recent-chips-wrap hidden">
+        <div class="recent-chips-label">🕘 최근 사용</div>
+        <div id="recentChips" class="recent-chips"></div>
+      </div>
     </div>
   </div>
 
@@ -1126,9 +1130,7 @@
   const midBreakSection = document.getElementById('midBreakSection');
   const midBreakTypeGroup = document.getElementById('midBreakTypeGroup');
   const midBreakDurationWrap = document.getElementById('midBreakDurationWrap');
-  const midBreakDurationGroup = document.getElementById('midBreakDurationGroup');
-  const midBreakCustomStepper = document.getElementById('midBreakCustomStepper');
-  const midBreakCustomDisplay = document.getElementById('midBreakCustomDisplay');
+  const midBreakDurationDisplay = document.getElementById('midBreakDurationDisplay');
   const midBreakTransitionWrap = document.getElementById('midBreakTransitionWrap');
   const midBreakTransitionGroup = document.getElementById('midBreakTransitionGroup');
 
@@ -1238,19 +1240,6 @@
     buildText();
   });
 
-  // 분(:00/:30) 버튼은 재생성되지 않는 고정 버튼이라 최초 1회만 바인딩
-  function bindMinToggle(minToggleEl, state, onChange){
-    minToggleEl.querySelectorAll('button').forEach(btn=>{
-      if(parseInt(btn.dataset.min) === state.min) btn.classList.add('active');
-      btn.addEventListener('click', ()=>{
-        state.min = parseInt(btn.dataset.min);
-        minToggleEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b === btn));
-        onChange();
-      });
-    });
-  }
-
-  const minToggleEl = document.getElementById('minToggle');
   const mainTimeBar = document.getElementById('mainTimeBar');
   const mainTimeSummary = document.getElementById('mainTimeSummary');
   const mainTimeEditBtn = document.getElementById('mainTimeEditBtn');
@@ -1268,18 +1257,27 @@
   }
   function updateMainTimeHourDisplay(){
     const displayH = currentDir === 'end' ? displayEndHour(timeState.hour) : timeState.hour;
-    mainTimeHourDisplay.textContent = `${displayH}시`;
+    mainTimeHourDisplay.textContent = `${displayH}:${pad2(timeState.min)}`;
   }
-  // 챕터1은 출근/퇴근 둘 다 커버해야 해서 스테퍼 범위를 하루 전체(0~23시)로 넓게 잡음
+  // 챕터1은 출근/퇴근 둘 다 커버해야 해서 스테퍼 범위를 하루 전체(0:00~23:30)로 넓게 잡음
+  // MH/IC/J 단축버튼이나 자동설정처럼 "정확한 시각으로 세팅"할 때 씀 (분은 이 함수가 안 건드림)
   function selectMainTimeHour(h){
     timeState.hour = Math.min(23, Math.max(0, h));
     updateMainTimeHourDisplay();
     mainTimeUserChanged();
   }
-  document.getElementById('mainTimeHourMinus').addEventListener('click', () => selectMainTimeHour(timeState.hour - 1));
-  document.getElementById('mainTimeHourPlus').addEventListener('click', () => selectMainTimeHour(timeState.hour + 1));
+  // +/- 버튼은 시+분을 하나로 묶어 30분씩 이동 — 액션 하나로 시간 조정 끝
+  function stepMainTime(deltaMin){
+    let total = timeState.hour * 60 + timeState.min + deltaMin;
+    total = Math.min(23 * 60 + 30, Math.max(0, total));
+    timeState.hour = Math.floor(total / 60);
+    timeState.min = total % 60;
+    updateMainTimeHourDisplay();
+    mainTimeUserChanged();
+  }
+  document.getElementById('mainTimeHourMinus').addEventListener('click', () => stepMainTime(-30));
+  document.getElementById('mainTimeHourPlus').addEventListener('click', () => stepMainTime(30));
   updateMainTimeHourDisplay();
-  bindMinToggle(minToggleEl, timeState, mainTimeUserChanged);
 
   function collapseMainTime(){
     mainTimeDetailWrap.classList.add('hidden');
@@ -1288,11 +1286,10 @@
   }
   bindEditToggle(mainTimeEditBtn, mainTimeDetailWrap, updateMainTimeSummary);
 
-  const minToggleNextEl = document.getElementById('minToggleNext');
 
   // 개인화 단축 버튼 팩토리 — 어느 시간 선택기(오늘 출근/다음 근무 시작 등)에 붙일지에 맞게
   // getSelectHour(현재 selectHour 참조를 얻는 함수), state, minToggleEl을 넘겨 그 선택기 전용으로 동작하게 함
-  function makeShortcutButtons(presets, getSelectHour, state, minToggleElRef, setLoc, locGroupElRef){
+  function makeShortcutButtons(presets, getSelectHour, state, onUpdate, setLoc, locGroupElRef){
     return presets.map(p=>{
       if(p.empty){
         return { label: '임대', className: 'quick-special empty', disabled: true };
@@ -1303,12 +1300,12 @@
         onClick: () => {
           getSelectHour()(p.hour);
           state.min = p.min;
-          minToggleElRef.querySelectorAll('button').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.min) === p.min));
           if(p.loc && setLoc && locGroupElRef){
             setLoc(p.loc);
             locGroupElRef.querySelectorAll('.toggle-btn').forEach(b=> b.classList.toggle('active', b.dataset.loc === p.loc));
           }
           mainTimeAutoNote = false;
+          if(onUpdate) onUpdate();
           buildText();
         }
       };
@@ -1316,9 +1313,9 @@
   }
 
   // MH/IC/J 같은 단축버튼을 "변경하기" 없이 상시 노출되는 행에 그림 + 맨 끝에 더보기(=상세 피커 펼치기) 버튼
-  function buildShortcutsRow(container, presets, getSelectHour, state, minToggleElRef, setLoc, locGroupElRef){
+  function buildShortcutsRow(container, presets, getSelectHour, state, onUpdate, setLoc, locGroupElRef){
     container.innerHTML = '';
-    makeShortcutButtons(presets, getSelectHour, state, minToggleElRef, setLoc, locGroupElRef).forEach(spec=>{
+    makeShortcutButtons(presets, getSelectHour, state, onUpdate, setLoc, locGroupElRef).forEach(spec=>{
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = spec.label;
@@ -1344,7 +1341,7 @@
 
   const mainShortcutsRow = document.getElementById('mainShortcutsRow');
   buildShortcutsRow(
-    mainShortcutsRow, startPresets, () => selectMainHour, timeState, minToggleEl,
+    mainShortcutsRow, startPresets, () => selectMainHour, timeState, updateMainTimeHourDisplay,
     (loc)=>{ currentLoc = loc; }, locGroup
   );
 
@@ -1360,27 +1357,20 @@
     nextTimeSummary.innerHTML = `내일 출근 시간: <b>${nextTimeState.hour}:${pad2(nextTimeState.min)}</b>${isDefault ? ' (기본)' : ''}`;
   }
   function updateNextTimeHourDisplay(){
-    nextTimeHourDisplay.textContent = `${nextTimeState.hour}시`;
+    nextTimeHourDisplay.textContent = `${nextTimeState.hour}:${pad2(nextTimeState.min)}`;
   }
-  function selectNextTimeHour(h){
-    nextTimeState.hour = Math.min(12, Math.max(5, h));
+  function stepNextTime(deltaMin){
+    let total = nextTimeState.hour * 60 + nextTimeState.min + deltaMin;
+    total = Math.min(12 * 60 + 30, Math.max(5 * 60, total));
+    nextTimeState.hour = Math.floor(total / 60);
+    nextTimeState.min = total % 60;
     updateNextTimeHourDisplay();
     updateNextTimeSummary();
     buildText();
   }
-  document.getElementById('nextTimeHourMinus').addEventListener('click', () => selectNextTimeHour(nextTimeState.hour - 1));
-  document.getElementById('nextTimeHourPlus').addEventListener('click', () => selectNextTimeHour(nextTimeState.hour + 1));
+  document.getElementById('nextTimeHourMinus').addEventListener('click', () => stepNextTime(-30));
+  document.getElementById('nextTimeHourPlus').addEventListener('click', () => stepNextTime(30));
   updateNextTimeHourDisplay();
-
-  minToggleNextEl.querySelectorAll('button').forEach(btn=>{
-    if(parseInt(btn.dataset.min) === nextTimeState.min) btn.classList.add('active');
-    btn.addEventListener('click', () => {
-      minToggleNextEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b === btn));
-      nextTimeState.min = parseInt(btn.dataset.min);
-      updateNextTimeSummary();
-      buildText();
-    });
-  });
 
   bindEditToggle(nextTimeEditBtn, nextTimeDetailWrap, updateNextTimeSummary);
   updateNextTimeSummary();
@@ -1493,6 +1483,126 @@
     return text;
   }
 
+  // ===== 복사 버튼 아래 "최근 사용" 3개 칩 — 옵션이 많은 사람도 자기가 자주 쓰는 조합을 한 번에 다시 복사할 수 있게 =====
+  const recentChipsWrap = document.getElementById('recentChipsWrap');
+  const recentChipsEl = document.getElementById('recentChips');
+
+  function getRecentKey(dir){ return `wf_recent_${dir}`; }
+  function loadRecent(dir){
+    try{
+      const raw = localStorage.getItem(getRecentKey(dir));
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveRecent(dir, list){
+    try{ localStorage.setItem(getRecentKey(dir), JSON.stringify(list)); }catch(e){}
+  }
+  function buildSnapshot(dir){
+    if(dir === 'start'){
+      return { loc: currentLoc, hour: timeState.hour, min: timeState.min };
+    }
+    if(dir === 'end'){
+      const snap = {
+        loc: currentLoc, hour: timeState.hour, min: timeState.min,
+        breakHours, noLunch,
+        nextLoc, nextHour: nextTimeState.hour, nextMin: nextTimeState.min
+      };
+      if(todayStartState.hour !== 9 || todayStartState.min !== 0){
+        snap.todayStart = { hour: todayStartState.hour, min: todayStartState.min, loc: todayStartLoc };
+      }
+      return snap;
+    }
+    return { midBreakType, midBreakHours, midBreakTransition }; // break
+  }
+  function pushRecent(dir, snap){
+    let list = loadRecent(dir).filter(s => JSON.stringify(s) !== JSON.stringify(snap)); // 중복 제거
+    list.unshift(snap);
+    list = list.slice(0, 3);
+    saveRecent(dir, list);
+    renderRecentChips(dir);
+  }
+  // 날짜가 들어가는 시작/종료는 "오늘" 날짜로 다시 계산, 휴게는 원래 날짜가 없어서 그대로 재사용
+  function renderTextFromSnapshot(dir, snap){
+    const now2 = new Date();
+    const m2 = now2.getMonth() + 1, d2 = now2.getDate(), dayName2 = days[now2.getDay()];
+    if(dir === 'start'){
+      return `${m2}/${d2}(${dayName2}) ${formatTime(snap.hour, snap.min)} ${typeLabel(snap.loc, 'start')}`;
+    }
+    if(dir === 'end'){
+      const dispH = displayEndHour(snap.hour);
+      let text = `${m2}/${d2}(${dayName2}) ${formatTime(dispH, snap.min)} ${typeLabel(snap.loc, 'end')}`;
+      const parenParts = [];
+      if(snap.todayStart){
+        parenParts.push(`${snap.todayStart.hour}:${pad2(snap.todayStart.min)} ${snap.todayStart.loc === 'office' ? '출근' : '시작'}`);
+      }
+      if(snap.breakHours > 0) parenParts.push(`${formatHoursKorean(snap.breakHours)} 휴게`);
+      if(snap.noLunch) parenParts.push('점심 없이 근무');
+      if(parenParts.length > 0) text += ` (${parenParts.join(', ')})`;
+      const nextDate2 = getNextWorkDate(now2);
+      const nDayName2 = days[nextDate2.getDay()];
+      text += `\n${nextDate2.getMonth()+1}/${nextDate2.getDate()}(${nDayName2}) ${formatTime(snap.nextHour, snap.nextMin)} ${typeLabel(snap.nextLoc, 'start')}`;
+      return text;
+    }
+    // break
+    if(snap.midBreakType === 'lunch'){
+      if(snap.midBreakTransition === 'home') return '점심시간 사용해 재택 전환합니다';
+      if(snap.midBreakTransition === 'office') return '점심시간 사용해 출근합니다';
+      return '점심시간 없이 근무합니다';
+    }
+    const prefix = `${formatHoursKorean(snap.midBreakHours)} 휴게`;
+    if(snap.midBreakTransition === 'home') return `${prefix} 사용해 재택 전환합니다`;
+    if(snap.midBreakTransition === 'office') return `${prefix} 사용해 출근합니다`;
+    return `${prefix} 사용합니다`;
+  }
+  function shortLabelFromSnapshot(dir, snap){
+    if(dir === 'start'){
+      return `${formatTime(snap.hour, snap.min)} ${snap.loc === 'office' ? '출근' : '재택'}`;
+    }
+    if(dir === 'end'){
+      return `${formatTime(displayEndHour(snap.hour), snap.min)} ${snap.loc === 'office' ? '출근' : '재택'}`;
+    }
+    if(snap.midBreakType === 'lunch'){
+      if(snap.midBreakTransition === 'home') return '점심·재택전환';
+      if(snap.midBreakTransition === 'office') return '점심·출근';
+      return '점심 없이';
+    }
+    const durLabel = formatHoursKorean(snap.midBreakHours);
+    if(snap.midBreakTransition === 'home') return `${durLabel} 휴게·재택전환`;
+    if(snap.midBreakTransition === 'office') return `${durLabel} 휴게·출근`;
+    return `${durLabel} 휴게`;
+  }
+  function renderRecentChips(dir){
+    const list = loadRecent(dir);
+    recentChipsEl.innerHTML = '';
+    recentChipsWrap.classList.toggle('hidden', list.length === 0);
+    list.forEach(snap => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'recent-chip';
+      const label = shortLabelFromSnapshot(dir, snap);
+      chip.textContent = label;
+      chip.addEventListener('click', async () => {
+        const text = renderTextFromSnapshot(dir, snap);
+        try{
+          await navigator.clipboard.writeText(text);
+        }catch(e){
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        const chipRect = chip.getBoundingClientRect();
+        burstEmojis(chipRect.left + chipRect.width / 2, chipRect.top + chipRect.height / 2);
+        chip.classList.add('copied');
+        chip.textContent = '복사 완!';
+        setTimeout(() => { chip.classList.remove('copied'); chip.textContent = label; }, 1200);
+      });
+      recentChipsEl.appendChild(chip);
+    });
+  }
+
   // 탭(구분)별로 마지막에 고른 근무 형태를 이 브라우저에 기억해뒀다가 다음에 그 탭 열 때 그대로 세팅
   function getSavedLoc(dir){
     try{ return localStorage.getItem(`wf_loc_${dir}`); }catch(e){ return null; }
@@ -1536,27 +1646,20 @@
     return isDefault;
   }
   function updateTodayStartHourDisplay(){
-    todayStartHourDisplay.textContent = `${todayStartState.hour}시`;
+    todayStartHourDisplay.textContent = `${todayStartState.hour}:${pad2(todayStartState.min)}`;
   }
-  function selectTodayStartHour(h){
-    todayStartState.hour = Math.min(12, Math.max(5, h));
+  function stepTodayStart(deltaMin){
+    let total = todayStartState.hour * 60 + todayStartState.min + deltaMin;
+    total = Math.min(12 * 60 + 30, Math.max(5 * 60, total));
+    todayStartState.hour = Math.floor(total / 60);
+    todayStartState.min = total % 60;
     updateTodayStartHourDisplay();
     updateTodayStartSummary();
     buildText();
   }
-  document.getElementById('todayStartHourMinus').addEventListener('click', () => selectTodayStartHour(todayStartState.hour - 1));
-  document.getElementById('todayStartHourPlus').addEventListener('click', () => selectTodayStartHour(todayStartState.hour + 1));
+  document.getElementById('todayStartHourMinus').addEventListener('click', () => stepTodayStart(-30));
+  document.getElementById('todayStartHourPlus').addEventListener('click', () => stepTodayStart(30));
   updateTodayStartHourDisplay();
-
-  document.getElementById('todayStartMinToggle').querySelectorAll('button').forEach(btn=>{
-    if(parseInt(btn.dataset.min) === todayStartState.min) btn.classList.add('active');
-    btn.addEventListener('click', () => {
-      document.getElementById('todayStartMinToggle').querySelectorAll('button').forEach(b=> b.classList.toggle('active', b === btn));
-      todayStartState.min = parseInt(btn.dataset.min);
-      updateTodayStartSummary();
-      buildText();
-    });
-  });
 
   bindEditToggle(todayStartEditBtn, todayStartDetailWrap, updateTodayStartSummary);
 
@@ -1613,6 +1716,7 @@
       track(`dir_${currentDir}`, `구분: ${btn.textContent.trim()}`);
       const isEnd = currentDir === 'end';
       const isBreakDir = currentDir === 'break';
+      renderRecentChips(currentDir);
       midBreakSection.classList.toggle('hidden', !isBreakDir);
       mainTimeSectionTitle.innerHTML = isEnd
         ? '<span class="step-num">1</span>근무 종료'
@@ -1644,7 +1748,7 @@
         mainShortcutsRow.classList.toggle('hidden', isEnd);
         if(!isEnd){
           buildShortcutsRow(
-            mainShortcutsRow, startPresets, () => selectMainHour, timeState, minToggleEl,
+            mainShortcutsRow, startPresets, () => selectMainHour, timeState, updateMainTimeHourDisplay,
             (loc)=>{ currentLoc = loc; }, locGroup
           );
         }
@@ -1652,7 +1756,7 @@
         const nowRounded = isEnd ? roundToNearest30(new Date()) : roundUpTo30(new Date());
         selectMainHour(nowRounded.hour);
         timeState.min = nowRounded.min;
-        minToggleEl.querySelectorAll('button').forEach(b=> b.classList.toggle('active', parseInt(b.dataset.min) === nowRounded.min));
+        updateMainTimeHourDisplay();
         mainTimeAutoNote = true;
         collapseMainTime();
 
@@ -1701,33 +1805,17 @@
     });
   });
 
-  midBreakDurationGroup.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      midBreakDurationGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if(btn.dataset.break === 'custom'){
-        midBreakCustomStepper.classList.remove('hidden');
-        if(midBreakHours <= 0) midBreakHours = 0.5;
-        updateMidBreakCustomDisplay();
-      } else {
-        midBreakCustomStepper.classList.add('hidden');
-        midBreakHours = parseFloat(btn.dataset.break);
-      }
-      buildText();
-    });
-  });
-
-  function updateMidBreakCustomDisplay(){
-    midBreakCustomDisplay.textContent = `${formatH(midBreakHours)}h`;
+  function updateMidBreakDurationDisplay(){
+    midBreakDurationDisplay.textContent = `${formatH(midBreakHours)}h`;
   }
-  document.getElementById('midBreakCustomMinus').addEventListener('click', () => {
+  document.getElementById('midBreakDurationMinus').addEventListener('click', () => {
     midBreakHours = Math.max(0.5, Math.round((midBreakHours - 0.5) * 2) / 2);
-    updateMidBreakCustomDisplay();
+    updateMidBreakDurationDisplay();
     buildText();
   });
-  document.getElementById('midBreakCustomPlus').addEventListener('click', () => {
+  document.getElementById('midBreakDurationPlus').addEventListener('click', () => {
     midBreakHours = Math.min(8, Math.round((midBreakHours + 0.5) * 2) / 2);
-    updateMidBreakCustomDisplay();
+    updateMidBreakDurationDisplay();
     buildText();
   });
 
@@ -1850,6 +1938,7 @@
     if(currentDir === 'start' || currentDir === 'end'){
       saveLoc(currentDir, currentLoc);
     }
+    pushRecent(currentDir, buildSnapshot(currentDir));
     try {
       await navigator.clipboard.writeText(text);
     } catch (e) {
