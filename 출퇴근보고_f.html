@@ -612,6 +612,9 @@
     border-radius:var(--radius-md);
     border:1px solid var(--neutral-line);
   }
+  #midBreakCustomStepper{
+    margin-top: 14px;
+  }
   .hour-stepper{
     display:flex;
     align-items:center;
@@ -976,6 +979,10 @@
           <button type="button" data-min="0">:00</button>
           <button type="button" data-min="30">:30</button>
         </div>
+        <div class="toggle-group" id="todayStartLocGroup" style="margin-top:14px;">
+          <button class="toggle-btn active" data-loc="home">🏠 재택 (시작)</button>
+          <button class="toggle-btn" data-loc="office">🏢 사무실 (출근)</button>
+        </div>
       </div>
 
       <div class="today-start-bar" id="breakBar">
@@ -1130,6 +1137,7 @@
   let nextLoc = 'home';      // 다음 근무일 근무 형태
   let breakHours = 0;        // 오늘 휴게 시간(퇴근 시 총합)
   const todayStartState = { hour: 9, min: 0 };  // 오늘 실제 출근 시각(9시 기본, 다르면 퇴근 결과문에 표기)
+  let todayStartLoc = 'home';  // 오늘 출근시각 표기 시 "시작"(재택) vs "출근"(사무실) 문구 결정용
   let mainTimeAutoNote = false;  // 챕터1 시간이 방금 접속시각 기준 자동설정된 상태인지
   let noLunch = false;       // 점심 없이 근무 여부(퇴근 시)
   let midBreakType = 'general';       // general | lunch-home | lunch-office | nolunch (휴게 구분 선택 시)
@@ -1464,7 +1472,7 @@
       if(currentDir === 'end'){
         const parenParts = [];
         if(todayStartState.hour !== 9 || todayStartState.min !== 0){
-          parenParts.push(`${todayStartState.hour}:${pad2(todayStartState.min)} 시작`);
+          parenParts.push(`${todayStartState.hour}:${pad2(todayStartState.min)} ${todayStartLoc === 'office' ? '출근' : '시작'}`);
         }
         if(breakHours > 0) parenParts.push(`${formatHoursKorean(breakHours)} 휴게`);
         if(noLunch) parenParts.push('점심 없이 근무');
@@ -1551,6 +1559,15 @@
   });
 
   bindEditToggle(todayStartEditBtn, todayStartDetailWrap, updateTodayStartSummary);
+
+  document.getElementById('todayStartLocGroup').querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('todayStartLocGroup').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      todayStartLoc = btn.dataset.loc;
+      buildText();
+    });
+  });
 
   const breakSummary = document.getElementById('breakSummary');
   const breakEditBtn = document.getElementById('breakEditBtn');
@@ -1745,11 +1762,36 @@
   function showFarewellPopup(dir){
     const content = farewellContent[dir];
     if(!content) return;
+
+    function positionAndAnimate(){
+      farewellOverlay.classList.remove('hidden');
+      const card = farewellOverlay.querySelector('.farewell-card');
+      // 복사 버튼 바로 위 지점에 고정 배치 (화면 정중앙이 아니라)
+      const btnRect = copyBtn.getBoundingClientRect();
+      let topPos = btnRect.top - 14;
+      const minTop = 270; // 이미지+문구가 화면 위로 잘리지 않게 최소 여백 확보
+      if(topPos < minTop) topPos = minTop;
+      card.style.left = (btnRect.left + btnRect.width / 2) + 'px';
+      card.style.top = topPos + 'px';
+      card.style.animation = 'none';
+      void card.offsetWidth; // 리플로우 강제 — 애니메이션 재시작 트릭
+      card.style.animation = '';
+      clearTimeout(farewellTimer);
+      farewellTimer = setTimeout(() => farewellOverlay.classList.add('hidden'), 1300);
+    }
+
     if(content.image){
-      farewellImg.src = content.image;
-      farewellImg.classList.remove('hidden');
       farewellEmoji.classList.add('hidden');
       farewellText.classList.add('hidden'); // 이미지 자체에 문구가 있으니 별도 텍스트는 숨김
+      farewellImg.classList.remove('hidden');
+      if(farewellImg.src.endsWith(content.image) && farewellImg.complete){
+        // 이미 로딩이 끝난 이미지(캐시/이전에 이미 불러온 경우) → 바로 진행
+        positionAndAnimate();
+      } else {
+        // 아직 로딩 중이면 실제로 다 불러와질 때까지 기다렸다가 시작 — 크기 몰라서 위치 튀는 문제 원천 차단
+        farewellImg.onload = positionAndAnimate;
+        farewellImg.src = content.image;
+      }
     } else {
       farewellImg.classList.add('hidden');
       farewellEmoji.classList.remove('hidden');
@@ -1757,21 +1799,8 @@
       farewellText.classList.remove('hidden');
       farewellText.textContent = content.text;
       farewellText.style.setProperty('--farewell-color', content.color);
+      positionAndAnimate();
     }
-    farewellOverlay.classList.remove('hidden');
-    const card = farewellOverlay.querySelector('.farewell-card');
-    // 복사 버튼 바로 위 지점에 고정 배치 (화면 정중앙이 아니라)
-    const btnRect = copyBtn.getBoundingClientRect();
-    let topPos = btnRect.top - 14;
-    const minTop = 270; // 이미지+문구가 화면 위로 잘리지 않게 최소 여백 확보
-    if(topPos < minTop) topPos = minTop;
-    card.style.left = (btnRect.left + btnRect.width / 2) + 'px';
-    card.style.top = topPos + 'px';
-    card.style.animation = 'none';
-    void card.offsetWidth; // 리플로우 강제 — 애니메이션 재시작 트릭
-    card.style.animation = '';
-    clearTimeout(farewellTimer);
-    farewellTimer = setTimeout(() => farewellOverlay.classList.add('hidden'), 1300);
   }
 
   const burstGold = ['#F2C14E', '#F2A93B', '#E0B84B', '#FFD700'];
