@@ -1674,9 +1674,9 @@
           showEndStep(1);
         }
       } else {
-        // 휴게 탭: 11시~13시 사이에 들어왔으면 "점심"을 기본으로, 아니면 평소처럼 "휴게"
+        // 휴게 탭: 11:40~12:20 사이에 들어왔으면 "점심"을 기본으로, 아니면 평소처럼 "휴게"
         const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
-        const isLunchTime = nowMin >= 11 * 60 && nowMin < 13 * 60;
+        const isLunchTime = nowMin >= 11 * 60 + 40 && nowMin <= 12 * 60 + 20;
         selectMidBreakType(isLunchTime ? 'lunch' : 'general');
       }
       buildText();
