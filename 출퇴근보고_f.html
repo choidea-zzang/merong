@@ -943,7 +943,11 @@
           <button class="toggle-btn" data-break="2">2h</button>
           <button class="toggle-btn" data-break="custom" id="midBreakCustomBtn">직접</button>
         </div>
-        <input type="number" id="midBreakCustomInput" class="custom-input hidden" step="0.5" min="0" placeholder="휴게 시간(h) 입력">
+        <div id="midBreakCustomStepper" class="hour-stepper hidden">
+          <button type="button" id="midBreakCustomMinus">−</button>
+          <span id="midBreakCustomDisplay" class="hour-stepper-display">0.5h</span>
+          <button type="button" id="midBreakCustomPlus">+</button>
+        </div>
       </div>
 
       <div id="midBreakTransitionWrap">
@@ -1001,7 +1005,10 @@
         <span id="nextDayLabel">-</span>
         <button type="button" id="nextDateEditBtn" class="edit-btn">변경하기</button>
       </div>
-      <input type="date" id="nextWorkDateInput" class="custom-input compact-input hidden">
+      <div id="nextDateDetailWrap" class="hidden">
+        <div class="detail-label">내일 출근일</div>
+        <input type="date" id="nextWorkDateInput" class="custom-input compact-input">
+      </div>
 
       <div class="today-start-bar" id="nextTimeBar">
         <span id="nextTimeSummary">내일 출근 시간: <b>9:00</b> (기본)</span>
@@ -1113,7 +1120,8 @@
   const midBreakTypeGroup = document.getElementById('midBreakTypeGroup');
   const midBreakDurationWrap = document.getElementById('midBreakDurationWrap');
   const midBreakDurationGroup = document.getElementById('midBreakDurationGroup');
-  const midBreakCustomInput = document.getElementById('midBreakCustomInput');
+  const midBreakCustomStepper = document.getElementById('midBreakCustomStepper');
+  const midBreakCustomDisplay = document.getElementById('midBreakCustomDisplay');
   const midBreakTransitionWrap = document.getElementById('midBreakTransitionWrap');
   const midBreakTransitionGroup = document.getElementById('midBreakTransitionGroup');
 
@@ -1155,11 +1163,12 @@
 
   const nextWorkDateInput = document.getElementById('nextWorkDateInput');
   const nextDateEditBtn = document.getElementById('nextDateEditBtn');
+  const nextDateDetailWrap = document.getElementById('nextDateDetailWrap');
   nextWorkDateInput.value = toDateInputValue(nextWorkDate);
 
   const nextDateBar = document.getElementById('nextDateBar');
   nextDateEditBtn.addEventListener('click', () => {
-    const nowHidden = nextWorkDateInput.classList.toggle('hidden');
+    const nowHidden = nextDateDetailWrap.classList.toggle('hidden');
     if(!nowHidden) openTimePicker(nextWorkDateInput);
   });
 
@@ -1405,6 +1414,15 @@
     return (n % 1 === 0) ? String(n) : n.toFixed(1);
   }
 
+  // 결과 문구에 넣을 때는 "1h"가 아니라 "1시간"/"30분"/"2시간 30분" 식으로 표기
+  function formatHoursKorean(n){
+    const h = Math.floor(n);
+    const m = Math.round((n - h) * 60);
+    if(h > 0 && m > 0) return `${h}시간 ${m}분`;
+    if(h > 0) return `${h}시간`;
+    return `${m}분`;
+  }
+
   function midBreakLabel(){
     if(midBreakType === 'lunch'){
       if(midBreakTransition === 'home') return '점심시간 사용해 재택 전환합니다';
@@ -1412,7 +1430,7 @@
       return '점심시간 없이 근무합니다'; // transition 'none' = 점심 자체를 안 씀
     }
     // general: 시간 + 전환(없음/재택/출근) 조합
-    const prefix = `${formatH(midBreakHours)}h 휴게`;
+    const prefix = `${formatHoursKorean(midBreakHours)} 휴게`;
     if(midBreakTransition === 'home') return `${prefix} 사용해 재택 전환합니다`;
     if(midBreakTransition === 'office') return `${prefix} 사용해 출근합니다`;
     return `${prefix} 사용합니다`;
@@ -1448,7 +1466,7 @@
         if(todayStartState.hour !== 9 || todayStartState.min !== 0){
           parenParts.push(`${todayStartState.hour}:${pad2(todayStartState.min)} 시작`);
         }
-        if(breakHours > 0) parenParts.push(`${formatH(breakHours)}h 휴게`);
+        if(breakHours > 0) parenParts.push(`${formatHoursKorean(breakHours)} 휴게`);
         if(noLunch) parenParts.push('점심 없이 근무');
         if(parenParts.length > 0) text += ` (${parenParts.join(', ')})`;
         const nextTimeStr = formatTime(nextTimeState.hour, nextTimeState.min);
@@ -1631,7 +1649,7 @@
           breakDetailWrap.classList.add('hidden');
           updateBreakSummary();
 
-          nextWorkDateInput.classList.add('hidden');
+          nextDateDetailWrap.classList.add('hidden');
 
           nextTimeDetailWrap.classList.add('hidden');
           updateNextTimeSummary();
@@ -1671,19 +1689,28 @@
       midBreakDurationGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       if(btn.dataset.break === 'custom'){
-        midBreakCustomInput.classList.remove('hidden');
-        midBreakCustomInput.focus();
-        midBreakHours = parseFloat(midBreakCustomInput.value) || 0;
+        midBreakCustomStepper.classList.remove('hidden');
+        if(midBreakHours <= 0) midBreakHours = 0.5;
+        updateMidBreakCustomDisplay();
       } else {
-        midBreakCustomInput.classList.add('hidden');
+        midBreakCustomStepper.classList.add('hidden');
         midBreakHours = parseFloat(btn.dataset.break);
       }
       buildText();
     });
   });
 
-  midBreakCustomInput.addEventListener('input', () => {
-    midBreakHours = parseFloat(midBreakCustomInput.value) || 0;
+  function updateMidBreakCustomDisplay(){
+    midBreakCustomDisplay.textContent = `${formatH(midBreakHours)}h`;
+  }
+  document.getElementById('midBreakCustomMinus').addEventListener('click', () => {
+    midBreakHours = Math.max(0.5, Math.round((midBreakHours - 0.5) * 2) / 2);
+    updateMidBreakCustomDisplay();
+    buildText();
+  });
+  document.getElementById('midBreakCustomPlus').addEventListener('click', () => {
+    midBreakHours = Math.min(8, Math.round((midBreakHours + 0.5) * 2) / 2);
+    updateMidBreakCustomDisplay();
     buildText();
   });
 
